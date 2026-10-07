@@ -5,77 +5,54 @@ import { categories } from "@/app/data/categories";
 
 export default function CategoryShowcase() {
   return (
-    <section className="py-24">
+    <section className="py-24 relative overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-
         <div className="mx-auto mb-16 max-w-3xl text-center">
-
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-zinc-500">
-            Shop By Category
+          <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-gold">
+            Shop By Collection
           </p>
-
-          <h2 className="mt-4 text-4xl font-bold text-zinc-900">
-            Explore Our Collections
+          <h2 className="mt-4 text-4xl font-light text-text">
+            <span className="block">Explore Our</span>
+            <span className="block font-serif italic text-primary mt-1">Floral Collections</span>
           </h2>
-
-          <p className="mt-5 text-lg leading-8 text-zinc-600">
-            Discover premium fashion collections for every member of your
-            family.
+          <p className="mt-5 text-base font-light leading-relaxed text-text/70 sm:text-lg">
+            Discover premium floral designs curated for weddings, anniversaries, and everyday elegance.
           </p>
-
         </div>
 
         <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-4">
-
           {categories.map((category) => (
-
             <Link
               key={category.id}
               href={`/products?category=${category.slug}`}
-              className="group overflow-hidden rounded-3xl border border-zinc-200 bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
+              className="group overflow-hidden rounded-[2.5rem] border border-gold/20 bg-white transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/15 hover:border-primary/30"
             >
-
               <div className="relative aspect-[4/5] overflow-hidden">
-
                 <Image
                   src={category.image}
                   alt={category.title}
                   fill
-                  className="object-cover transition duration-500 group-hover:scale-110"
+                  className="object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
                 />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-
-              </div>
-
-              <div className="flex items-center justify-between p-6">
-
-                <div>
-
-                  <h3 className="text-xl font-semibold text-zinc-900">
-                    {category.title}
-                  </h3>
-
-                  <p className="mt-1 text-sm text-zinc-500">
-                    Browse Collection
-                  </p>
-
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
+                
+                <div className="absolute bottom-0 left-0 w-full p-6 pb-8 flex items-end justify-between z-10">
+                  <div>
+                    <h3 className="text-2xl font-serif text-white tracking-wide">
+                      {category.title}
+                    </h3>
+                    <p className="mt-1 text-[11px] font-bold uppercase tracking-widest text-gold/80">
+                      Browse Collection
+                    </p>
+                  </div>
+                  <div className="rounded-full bg-white/20 p-3 text-white backdrop-blur-md transition-all duration-300 group-hover:bg-primary group-hover:shadow-lg group-hover:shadow-primary/50 group-hover:scale-110">
+                    <ArrowRight size={18} strokeWidth={2} className="transition-transform group-hover:translate-x-0.5" />
+                  </div>
                 </div>
-
-                <div className="rounded-full bg-black p-3 text-white transition-transform duration-300 group-hover:translate-x-1">
-
-                  <ArrowRight size={18} />
-
-                </div>
-
               </div>
-
             </Link>
-
           ))}
-
         </div>
-
       </div>
     </section>
   );

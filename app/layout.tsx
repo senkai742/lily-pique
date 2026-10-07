@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { colors } from "../config/colors";
+import { CartProvider } from "./context/CartContext";
+import CartDrawer from "./components/cart/CartDrawer";
 
 const outfit = Outfit({
   variable: "--font-sans",
@@ -42,9 +44,12 @@ export default function RootLayout({
       } as React.CSSProperties}
     >
       <body className="min-h-full flex flex-col bg-background text-text font-sans">
-        <Navbar />
-        {children}
-        <Footer />
+        <CartProvider>
+          <Navbar />
+          {children}
+          <Footer />
+          <CartDrawer />
+        </CartProvider>
       </body>
     </html>
   );

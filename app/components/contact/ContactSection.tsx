@@ -1,132 +1,154 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   Phone,
   Mail,
   MapPin,
   Clock,
   MessageCircle,
+  Flower2,
 } from "lucide-react";
 import { FaFacebook } from "react-icons/fa";
 import { siteConfig } from "@/config/site";
 
 export default function ContactPage() {
   return (
-    <main className="bg-white">
-      {/* Hero Section */}
-      <section className="border-b border-zinc-100 bg-zinc-50 py-12 sm:py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
-            Contact Us
-          </span>
-          <h1 className="mt-3 text-3xl font-normal uppercase tracking-tight text-zinc-900 sm:text-4xl lg:text-5xl">
-            We'd Love to Hear From You
-          </h1>
-          <p className="mt-4 max-w-xl text-sm font-light leading-relaxed text-zinc-500 sm:text-base">
-            Have questions about our products or want to place an order? 
-            Reach out directly through phone, email, or WhatsApp.
-          </p>
-        </div>
-      </section>
+    <main className="relative overflow-hidden bg-background min-h-[calc(100vh-80px)] flex flex-col">
+      
+      {/* Decorative background blobs */}
+      <div className="pointer-events-none absolute top-0 left-0 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-secondary/30 blur-[120px] opacity-60" />
+      <div className="pointer-events-none absolute bottom-0 right-0 h-[500px] w-[500px] translate-x-1/3 translate-y-1/3 rounded-full bg-primary/10 blur-[100px] opacity-50" />
+      
+      {/* Subtle floral watermark */}
+      <div className="pointer-events-none absolute left-[10%] top-1/4 select-none overflow-hidden opacity-[0.03]">
+        <Flower2 size={400} strokeWidth={0.5} className="text-primary rotate-12" />
+      </div>
 
-      {/* Main Content Info Block */}
-      <section className="py-12 sm:py-16 lg:py-20">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[400px_1fr] lg:px-8">
+      <div className="relative z-10 flex-1 flex flex-col justify-center py-16 sm:py-24 lg:py-32">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
           
-          {/* Left Column: Direct Action Info */}
-          <div className="space-y-8">
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1">
+          <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 items-center">
+            
+            {/* Left: Content Info */}
+            <div className="order-2 lg:order-1 space-y-10">
               
-              {/* Phone Entry */}
-              <div className="border-t border-zinc-200 pt-4">
-                <div className="flex items-center gap-2 text-zinc-900">
-                  <Phone size={14} strokeWidth={2} />
-                  <h2 className="text-xs font-bold uppercase tracking-widest">Phone</h2>
+              <div>
+                <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-secondary/30 backdrop-blur-sm px-4 py-1.5 shadow-sm">
+                  <Flower2 size={14} className="text-primary" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary">
+                    Get in Touch
+                  </span>
                 </div>
-                <div className="mt-2.5 space-y-1 text-sm font-medium text-zinc-900">
-                  {siteConfig.phones.map((phone) => (
-                    <Link key={phone} href={`tel:${phone}`} className="block hover:text-zinc-500 transition-colors">
-                      {phone}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              {/* Email Entry */}
-              <div className="border-t border-zinc-200 pt-4">
-                <div className="flex items-center gap-2 text-zinc-900">
-                  <Mail size={14} strokeWidth={2} />
-                  <h2 className="text-xs font-bold uppercase tracking-widest">Email</h2>
-                </div>
-                <div className="mt-2.5 space-y-1 text-sm font-medium text-zinc-900 break-all">
-                  {siteConfig.emails.map((email) => (
-                    <Link key={email} href={`mailto:${email}`} className="block hover:text-zinc-500 transition-colors">
-                      {email}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              {/* Address Entry */}
-              <div className="border-t border-zinc-200 pt-4">
-                <div className="flex items-center gap-2 text-zinc-900">
-                  <MapPin size={14} strokeWidth={2} />
-                  <h2 className="text-xs font-bold uppercase tracking-widest">Address</h2>
-                </div>
-                <p className="mt-2.5 text-sm font-medium text-zinc-900 leading-relaxed">
-                  {siteConfig.address}
+                
+                <h1 className="mt-2 text-4xl font-light tracking-tight text-text sm:text-5xl lg:text-6xl leading-[1.1]">
+                  <span className="block">We'd Love to</span>
+                  <span className="block font-serif italic text-primary mt-1">Hear From You</span>
+                </h1>
+                
+                <p className="mt-6 max-w-lg text-base font-light leading-relaxed text-text/70 sm:text-lg">
+                  Whether you have questions about our floral arrangements, wholesale orders, or want to request a custom bouquet, our artisan team is here to assist you.
                 </p>
               </div>
 
-              {/* Hours Entry */}
-              <div className="border-t border-zinc-200 pt-4">
-                <div className="flex items-center gap-2 text-zinc-900">
-                  <Clock size={14} strokeWidth={2} />
-                  <h2 className="text-xs font-bold uppercase tracking-widest">Business Hours</h2>
+              {/* Info Rows */}
+              <div className="space-y-8 border-t border-gold/20 pt-8 max-w-md">
+                
+                {/* Phone */}
+                <div className="flex items-start gap-5 group">
+                  <div className="mt-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-secondary/50 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-white">
+                    <Phone size={20} strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <h2 className="text-[10px] font-bold uppercase tracking-widest text-gold mb-1">Phone</h2>
+                    <div className="space-y-1 text-base font-medium text-text">
+                      {siteConfig.phones.map((phone) => (
+                        <Link key={phone} href={`tel:${phone}`} className="block hover:text-primary transition-colors">
+                          {phone}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <div className="mt-2.5 text-sm font-medium text-zinc-900 space-y-0.5">
-                  <p>Saturday - Thursday</p>
-                  <p className="text-xs font-light text-zinc-500">9:00 AM - 9:00 PM</p>
+
+                {/* Email */}
+                <div className="flex items-start gap-5 group">
+                  <div className="mt-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-secondary/50 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-white">
+                    <Mail size={20} strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <h2 className="text-[10px] font-bold uppercase tracking-widest text-gold mb-1">Email</h2>
+                    <div className="space-y-1 text-base font-medium text-text break-all">
+                      {siteConfig.emails.map((email) => (
+                        <Link key={email} href={`mailto:${email}`} className="block hover:text-primary transition-colors">
+                          {email}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
                 </div>
+
+                {/* Address */}
+                <div className="flex items-start gap-5 group">
+                  <div className="mt-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-secondary/50 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-white">
+                    <MapPin size={20} strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <h2 className="text-[10px] font-bold uppercase tracking-widest text-gold mb-1">Studio Address</h2>
+                    <p className="text-base font-medium text-text leading-relaxed">
+                      {siteConfig.address}
+                    </p>
+                    <div className="mt-3 flex items-center gap-1.5 text-text/60">
+                      <Clock size={14} />
+                      <span className="text-xs font-semibold">Sat - Thu: 9:00 AM - 9:00 PM</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Social Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                {siteConfig.socials.facebook && (
+                  <Link
+                    href={siteConfig.socials.facebook}
+                    target="_blank"
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-primary/20 bg-white px-8 py-4 text-xs font-bold uppercase tracking-widest text-primary shadow-sm transition-all hover:bg-secondary hover:-translate-y-0.5 hover:shadow-md"
+                  >
+                    <FaFacebook size={16} />
+                    Facebook
+                  </Link>
+                )}
+
+                <Link
+                  href={`https://wa.me/${siteConfig.socials.whatsapp.replace("+", "")}`}
+                  target="_blank"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-8 py-4 text-xs font-bold uppercase tracking-widest text-white shadow-lg shadow-primary/25 transition-all hover:bg-text hover:-translate-y-0.5 hover:shadow-text/20"
+                >
+                  <MessageCircle size={16} />
+                  WhatsApp
+                </Link>
               </div>
 
             </div>
 
-            {/* Social Media Link Buttons */}
-            <div className="flex gap-3 pt-4 border-t border-zinc-200">
-              {siteConfig.socials.facebook && (
-                <Link
-                  href={siteConfig.socials.facebook}
-                  target="_blank"
-                  className="inline-flex items-center justify-center gap-2 border border-zinc-200 bg-white px-5 py-3 text-xs font-semibold uppercase tracking-wider text-zinc-900 transition hover:bg-zinc-50 rounded-none"
-                >
-                  <FaFacebook size={14} />
-                  Facebook
-                </Link>
-              )}
-
-              <Link
-                href={`https://wa.me/${siteConfig.socials.whatsapp.replace("+", "")}`}
-                target="_blank"
-                className="inline-flex items-center justify-center gap-2 bg-zinc-900 px-5 py-3 text-xs font-semibold uppercase tracking-wider text-white transition hover:bg-zinc-800 rounded-none"
-              >
-                <MessageCircle size={14} />
-                WhatsApp
-              </Link>
+            {/* Right: Elegant Image (Replaced Map) */}
+            <div className="order-1 lg:order-2 relative w-full max-w-md mx-auto lg:max-w-none">
+              <div className="relative aspect-[3/4] overflow-hidden rounded-t-[12rem] rounded-b-[2rem] bg-secondary shadow-2xl ring-1 ring-gold/20">
+                <Image
+                  src="/images/flowerabout.png"
+                  alt="Contact LilyPique"
+                  fill
+                  className="object-cover transition-transform duration-1000 hover:scale-105"
+                />
+                <div className="absolute inset-0 rounded-t-[12rem] rounded-b-[2rem] ring-1 ring-inset ring-white/30 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent mix-blend-overlay pointer-events-none" />
+              </div>
             </div>
-          </div>
 
-          {/* Right Column: Clean Frame Map Showcase */}
-          <div className="relative border border-zinc-200 bg-zinc-50 rounded-none overflow-hidden aspect-square lg:aspect-auto lg:h-[580px]">
-            <iframe
-              src="https://www.google.com/maps?q=Dhaka,Bangladesh&output=embed"
-              className="absolute inset-0 h-full w-full grayscale contrast-125 opacity-90 transition-all hover:grayscale-0"
-              loading="lazy"
-              allowFullScreen
-            />
           </div>
-
+          
         </div>
-      </section>
+      </div>
     </main>
   );
 }

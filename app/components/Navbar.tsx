@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Phone, X } from "lucide-react";
+import { Menu, Phone, X, ShoppingBag } from "lucide-react";
 import { useState } from "react";
 import { siteConfig } from "@/config/site";
 import navItems from "@/config/navItems";
 import Logo from "./Logo";
+import { useCart } from "@/app/context/CartContext";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { cartCount, setIsDrawerOpen } = useCart();
 
   return (
     <header className="sticky top-0 z-50 border-b border-gold/20 bg-background/90 backdrop-blur-md">
@@ -48,41 +50,47 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Desktop CTA */}
-        <div className="hidden md:block">
-          <Link
-            href={`tel:${siteConfig.phones[0]}`}
-            className="flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-medium text-white transition hover:bg-secondary"
-          >
-            <Phone size={16} />
-            Call Now
-          </Link>
-        </div>
+        {/* Actions Container */}
+        <div className="flex items-center gap-4">
+          
+          {/* Desktop CTA */}
+          <div className="hidden md:block">
+            <Link
+              href={`tel:${siteConfig.phones[0]}`}
+              className="flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-medium text-white transition hover:bg-secondary"
+            >
+              <Phone size={16} />
+              Call Now
+            </Link>
+          </div>
 
-        {/* Mobile Button */}
-        <button
-          onClick={() => setOpen(!open)}
-          aria-label="Toggle Menu"
-          className="
-    flex h-11 w-11 items-center justify-center
-    rounded-xl
-    border border-gold
-    bg-background
-    text-text
-    shadow-sm
-    transition-all duration-200
-    hover:bg-secondary
-    hover:border-primary
-    active:scale-95
-    md:hidden
-  "
-        >
-          {open ? (
-            <X size={24} strokeWidth={2.5} />
-          ) : (
-            <Menu size={24} strokeWidth={2.5} />
-          )}
-        </button>
+          {/* Cart Button */}
+          <button
+            onClick={() => setIsDrawerOpen(true)}
+            className="relative flex h-11 w-11 items-center justify-center rounded-full bg-secondary/30 text-primary transition-all duration-200 hover:bg-secondary active:scale-95 border border-primary/20"
+            aria-label="Open Cart"
+          >
+            <ShoppingBag size={20} />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white shadow-sm ring-2 ring-background">
+                {cartCount}
+              </span>
+            )}
+          </button>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setOpen(!open)}
+            aria-label="Toggle Menu"
+            className="flex h-11 w-11 items-center justify-center rounded-xl border border-gold bg-background text-text shadow-sm transition-all duration-200 hover:bg-secondary hover:border-primary active:scale-95 md:hidden"
+          >
+            {open ? (
+              <X size={24} strokeWidth={2.5} />
+            ) : (
+              <Menu size={24} strokeWidth={2.5} />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
