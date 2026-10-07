@@ -17,6 +17,15 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
+.aesthetic-bg {
+  background: radial-gradient(
+    circle at top right, 
+    #F7F4F6 0%, 
+    #F2ECEF 40%, 
+    #E8D5E0 100%
+  );
+}
+
 @keyframes infiniteScroll {
   from {
     transform: translateX(0);

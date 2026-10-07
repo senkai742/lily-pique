@@ -5,7 +5,7 @@ import { siteConfig } from "@/config/site";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-background lg:flex lg:items-center lg:min-h-[calc(100vh-64px)] py-6 sm:py-10 lg:py-0">
+    <section className="relative overflow-hidden aesthetic-bg lg:flex lg:items-center lg:min-h-[calc(100vh-64px)] py-6 sm:py-10 lg:py-0">
       <div className="relative mx-auto grid max-w-7xl items-center gap-8 px-4 sm:px-6 lg:grid-cols-2 lg:px-8 lg:gap-12 w-full">
         
         {/* Left Column (Content) */}

@@ -31,7 +31,7 @@ export default function Logo({
         <div className="leading-tight">
           <h1
             className={`text-xl font-bold tracking-tight ${
-              dark ? "text-white" : "text-zinc-900"
+              dark ? "text-white" : "text-primary"
             }`}
           >
             LilyPique
