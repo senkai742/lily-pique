@@ -3,49 +3,32 @@ import Link from "next/link";
 import { siteConfig } from "@/config/site";
 
 interface LogoProps {
-  showText?: boolean;
+  showText?: boolean; // Kept for backwards compatibility but ignored
   size?: number;
   dark?: boolean;
 }
 
 export default function Logo({
-  showText = false,
   size = 50,
   dark = false,
 }: LogoProps) {
   return (
     <Link
       href="/"
-      className="flex items-center gap-3 transition-opacity hover:opacity-90"
+      className="group flex items-center transition-all duration-300 hover:opacity-80"
     >
-      <Image
-        src="/images/logo.png"
-        alt={siteConfig.name}
-        width={size}
-        height={size}
-        priority
-        className="object-contain"
-      />
-
-      {showText && (
-        <div className="leading-tight">
-          <h1
-            className={`text-xl font-bold tracking-tight ${
-              dark ? "text-white" : "text-primary"
-            }`}
-          >
-            LilyPique
-          </h1>
-
-          <p
-            className={`mt-1 text-xs uppercase tracking-[0.25em] ${
-              dark ? "text-zinc-400" : "text-zinc-500"
-            }`}
-          >
-            Premium Fashion
-          </p>
-        </div>
-      )}
+      <div className="relative flex items-center justify-start -ml-2 sm:ml-0">
+        <Image
+          src="/images/navlogo.png"
+          alt={siteConfig.name}
+          width={size * 4}
+          height={size * 1.2}
+          priority
+          className={`object-contain w-[200px]  sm:w-auto h-auto transition-transform duration-300 group-hover:scale-105 ${
+            dark ? "brightness-0 invert opacity-90" : "drop-shadow-sm"
+          }`}
+        />
+      </div>
     </Link>
   );
 }

@@ -15,9 +15,9 @@ export const siteConfig = {
   address: "Dhaka, Bangladesh",
 
   hero: {
-    title: "Discover Premium Fashion",
+    title: "Fresh & Elegant Floral Designs",
     subtitle:
-      "Wholesale & Retail clothing for men, women and children.",
+      "Handcrafted bouquets and artisan floral arrangements for every special moment.",
   },
 
   socials: {

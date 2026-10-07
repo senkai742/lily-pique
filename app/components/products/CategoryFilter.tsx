@@ -7,36 +7,41 @@ interface Props {
 
 export default function CategoryFilter({ active }: Props) {
   return (
-    <div 
-      className="flex gap-4 overflow-x-auto border-b border-zinc-100 pb-3 pt-1 scrollbar-none"
-      style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-    >
-      {/* "All" Filter Option */}
-      <Link
-        href="/products"
-        className={`whitespace-nowrap px-5 py-2.5 text-xs font-semibold uppercase tracking-wider transition duration-150 rounded-none border ${
-          !active
-            ? "border-zinc-900 bg-zinc-900 text-white"
-            : "border-zinc-200 bg-white text-zinc-800 hover:border-zinc-900 hover:text-zinc-900"
-        }`}
+    <div className="relative mb-10">
+      <div 
+        className="flex items-center gap-3 overflow-x-auto pb-4 pt-1 scrollbar-none"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        All
-      </Link>
-
-      {/* Dynamic Category Option Loop */}
-      {categories.map((category) => (
+        {/* "All" Filter Option */}
         <Link
-          key={category.id}
-          href={`/products?category=${category.slug}`}
-          className={`whitespace-nowrap px-5 py-2.5 text-xs font-semibold uppercase tracking-wider transition duration-150 rounded-none border ${
-            active === category.slug
-              ? "border-zinc-900 bg-zinc-900 text-white"
-              : "border-zinc-200 bg-white text-zinc-800 hover:border-zinc-900 hover:text-zinc-900"
+          href="/products"
+          className={`whitespace-nowrap rounded-full px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest transition-all duration-300 shadow-sm ${
+            !active
+              ? "bg-primary text-white shadow-primary/25 ring-1 ring-primary"
+              : "bg-white text-text/60 ring-1 ring-gold/20 hover:bg-secondary/40 hover:text-primary hover:ring-primary/30"
           }`}
         >
-          {category.title}
+          All Blooms
         </Link>
-      ))}
+
+        {/* Dynamic Category Option Loop */}
+        {categories.map((category) => (
+          <Link
+            key={category.id}
+            href={`/products?category=${category.slug}`}
+            className={`whitespace-nowrap rounded-full px-5 py-2.5 text-[11px] font-bold uppercase tracking-widest transition-all duration-300 shadow-sm ${
+              active === category.slug
+                ? "bg-primary text-white shadow-primary/25 ring-1 ring-primary"
+                : "bg-white text-text/60 ring-1 ring-gold/20 hover:bg-secondary/40 hover:text-primary hover:ring-primary/30"
+            }`}
+          >
+            {category.title}
+          </Link>
+        ))}
+      </div>
+      
+      {/* Decorative bottom line */}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold/20 to-transparent" />
     </div>
   );
 }

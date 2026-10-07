@@ -1,131 +1,106 @@
 import Link from "next/link";
-import { Phone, Mail, MapPin, ArrowRight } from "lucide-react";
+import { Phone, ArrowRight, Flower2, MessageCircle } from "lucide-react";
 import { siteConfig } from "@/config/site";
 
 export default function ContactSection() {
   return (
-    <section className="py-12 md:py-20 lg:py-24">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="relative overflow-hidden bg-white py-12 sm:py-16 lg:py-24">
 
-        <div className="overflow-hidden rounded-2xl bg-zinc-900 md:rounded-[32px]">
+      {/* Decorative background blobs */}
+      <div className="pointer-events-none absolute -top-24 -left-24 h-[500px] w-[500px] rounded-full bg-secondary/30 blur-[130px] opacity-70" />
+      <div className="pointer-events-none absolute -bottom-24 -right-24 h-[450px] w-[450px] rounded-full bg-primary/15 blur-[120px] opacity-60" />
+      <div className="pointer-events-none absolute top-1/2 left-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gold/10 blur-[100px] opacity-50" />
 
-          <div className="grid gap-10 p-6 sm:p-8 md:p-10 lg:grid-cols-2 lg:gap-16 lg:p-16">
+      {/* Subtle floral petal watermark */}
+      <div className="pointer-events-none absolute right-0 top-0 select-none overflow-hidden opacity-[0.035]">
+        <Flower2
+          size={520}
+          strokeWidth={0.5}
+          className="translate-x-1/3 -translate-y-1/4 text-primary"
+        />
+      </div>
+      <div className="pointer-events-none absolute left-0 bottom-0 select-none overflow-hidden opacity-[0.03]">
+        <Flower2
+          size={380}
+          strokeWidth={0.5}
+          className="-translate-x-1/3 translate-y-1/4 text-primary"
+        />
+      </div>
 
-            {/* Left */}
-            <div className="flex flex-col justify-center">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-zinc-400">
-                Contact
+        {/* Section Header */}
+        <div className="text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-secondary/40 backdrop-blur-sm px-4 py-1.5 shadow-sm">
+            <Flower2 size={14} className="text-primary" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-primary">
+              Get in Touch
+            </span>
+          </div>
+
+          <h2 className="mt-4 text-3xl font-light tracking-tight text-text sm:text-4xl lg:text-5xl leading-[1.2]">
+            <span className="block">Let&apos;s Create Something</span>
+            <span className="block font-serif italic text-primary">Beautiful Together</span>
+          </h2>
+
+          <p className="mx-auto mt-5 max-w-xl text-base font-light leading-relaxed text-text/70 sm:text-lg">
+            Whether it&apos;s a bouquet for a loved one or a full event arrangement,
+            we&apos;re here to bring your floral vision to life.
+          </p>
+        </div>
+
+        {/* CTA Banner */}
+        <div className="mt-8 sm:mt-10 overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-primary via-[#c49ecb] to-[#a070af] shadow-2xl shadow-primary/25 ring-1 ring-white/10">
+          {/* Inner decorative shimmer */}
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0" />
+
+          <div className="relative grid gap-6 sm:gap-8 px-6 sm:px-10 py-8 sm:py-10 lg:grid-cols-2 lg:items-center lg:gap-12">
+
+            {/* Left text */}
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.35em] text-white/60">
+                Ready to order?
               </p>
-
-              <h2 className="mt-3 text-3xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl">
-                Ready to Place an Order?
-              </h2>
-
-              <p className="mt-5 max-w-lg text-base leading-7 text-zinc-300 lg:text-lg lg:leading-8">
-                Contact LilyPique today for wholesale and retail clothing.
-                We're always happy to assist you with product inquiries,
-                pricing and bulk orders.
+              <h3 className="mt-2 text-2xl font-light text-white sm:text-3xl leading-snug">
+                <span className="block">Bring Your Floral</span>
+                <span className="block font-serif italic">Dreams to Life</span>
+              </h3>
+              <p className="mt-3 text-sm font-light leading-relaxed text-white/75 max-w-sm">
+                From elegant centerpieces to handcrafted bouquets — we&apos;ll
+                craft the perfect arrangement for your moment.
               </p>
-
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-
-                <Link
-                  href={`tel:${siteConfig.phones[0]}`}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 font-medium text-zinc-900 transition hover:bg-zinc-200 sm:w-auto"
-                >
-                  <Phone size={18} />
-                  Call Now
-                </Link>
-
-                <Link
-                  href="/contact"
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-zinc-600 px-6 py-3.5 font-medium text-white transition hover:bg-zinc-800 sm:w-auto"
-                >
-                  Contact Page
-                  <ArrowRight size={18} />
-                </Link>
-
-              </div>
-
             </div>
 
-            {/* Right */}
-            <div className="grid gap-4">
+            {/* Right buttons */}
+            <div className="flex flex-col gap-3 sm:flex-row lg:justify-end">
+              <Link
+                href={`tel:${siteConfig.phones[0]}`}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-primary shadow-md transition-all duration-200 hover:bg-secondary hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                <Phone size={15} strokeWidth={2} />
+                Call Now
+              </Link>
 
-              {/* Phone */}
-              <div className="flex items-start gap-4 rounded-2xl bg-white/5 p-5">
+              <Link
+                href={`https://wa.me/${siteConfig.socials.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/20 hover:-translate-y-0.5"
+              >
+                <MessageCircle size={15} strokeWidth={2} />
+                WhatsApp
+              </Link>
 
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-zinc-900">
-                  <Phone size={20} />
-                </div>
-
-                <div className="min-w-0">
-                  <h3 className="text-base font-semibold text-white">
-                    Phone
-                  </h3>
-
-                  {siteConfig.phones.map((phone, index) => (
-                    <Link
-                      key={index}
-                      href={`tel:${phone}`}
-                      className="mt-1 block break-all text-sm leading-6 text-zinc-300 transition hover:text-white"
-                    >
-                      {phone}
-                    </Link>
-                  ))}
-                </div>
-
-              </div>
-
-              {/* Email */}
-              <div className="flex items-start gap-4 rounded-2xl bg-white/5 p-5">
-
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-zinc-900">
-                  <Mail size={20} />
-                </div>
-
-                <div className="min-w-0">
-                  <h3 className="text-base font-semibold text-white">
-                    Email
-                  </h3>
-
-                  {siteConfig.emails.map((email, index) => (
-                    <Link
-                      key={index}
-                      href={`mailto:${email}`}
-                      className="mt-1 block break-all text-sm leading-6 text-zinc-300 transition hover:text-white"
-                    >
-                      {email}
-                    </Link>
-                  ))}
-                </div>
-
-              </div>
-
-              {/* Address */}
-              <div className="flex items-start gap-4 rounded-2xl bg-white/5 p-5">
-
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-zinc-900">
-                  <MapPin size={20} />
-                </div>
-
-                <div className="min-w-0">
-                  <h3 className="text-base font-semibold text-white">
-                    Address
-                  </h3>
-
-                  <p className="mt-1 text-sm leading-6 text-zinc-300">
-                    {siteConfig.address}
-                  </p>
-                </div>
-
-              </div>
-
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/20 hover:-translate-y-0.5"
+              >
+                Contact Page
+                <ArrowRight size={14} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
             </div>
 
           </div>
-
         </div>
 
       </div>
