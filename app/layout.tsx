@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 import { Outfit, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 import { colors } from "../config/colors";
-import { CartProvider } from "./context/CartContext";
-import CartDrawer from "./components/cart/CartDrawer";
+import ClientLayoutWrapper from "./components/ClientLayoutWrapper";
 
 const outfit = Outfit({
   variable: "--font-sans",
@@ -44,12 +42,9 @@ export default function RootLayout({
       } as React.CSSProperties}
     >
       <body className="min-h-full flex flex-col bg-background text-text font-sans">
-        <CartProvider>
-          <Navbar />
+        <ClientLayoutWrapper>
           {children}
-          <Footer />
-          <CartDrawer />
-        </CartProvider>
+        </ClientLayoutWrapper>
       </body>
     </html>
   );
