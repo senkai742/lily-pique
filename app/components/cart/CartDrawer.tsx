@@ -2,6 +2,7 @@
 
 import React, { useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { X, Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
 
@@ -140,9 +141,13 @@ export default function CartDrawer() {
               <span>Subtotal</span>
               <span className="font-bold">৳ {cartTotal.toLocaleString("en-BD")}</span>
             </div>
-            <button className="w-full rounded-full bg-primary py-4 text-xs font-bold uppercase tracking-widest text-white shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:shadow-text/20 hover:bg-text">
+            <Link
+              href="/checkout"
+              onClick={() => setIsDrawerOpen(false)}
+              className="block w-full rounded-full bg-primary py-4 text-center text-xs font-bold uppercase tracking-widest text-white shadow-lg shadow-primary/25 transition-all hover:-translate-y-0.5 hover:shadow-text/20 hover:bg-text"
+            >
               Proceed to Checkout
-            </button>
+            </Link>
           </div>
         )}
       </div>

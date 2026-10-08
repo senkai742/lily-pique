@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { logout } from "@/app/admin/actions";
 import { 
   LayoutDashboard, 
   Package, 
@@ -90,13 +91,15 @@ export default function AdminDashboardLayout({
         </nav>
 
         <div className="p-4 border-t border-zinc-100 bg-white">
-          <Link
-            href="/admin"
-            className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
-          >
-            <LogOut size={18} />
-            Logout
-          </Link>
+          <form action={logout}>
+            <button
+              type="submit"
+              className="flex w-full items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+            >
+              <LogOut size={18} />
+              Logout
+            </button>
+          </form>
         </div>
       </aside>
 

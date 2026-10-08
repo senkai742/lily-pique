@@ -17,6 +17,10 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
+button, a, select, [role="button"] {
+  cursor: pointer;
+}
+
 .aesthetic-bg {
   background: radial-gradient(
     circle at top right, 
