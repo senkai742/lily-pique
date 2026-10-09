@@ -53,7 +53,7 @@ export default function ProductsTable({ initialProducts }: { initialProducts: Pr
             <div className="flex items-center gap-4">
               <div className="relative h-12 w-12 rounded-lg border border-zinc-200 bg-zinc-50 overflow-hidden flex-shrink-0 flex items-center justify-center">
                 {product.image ? (
-                  <Image src={product.image} alt={product.name} fill className="object-cover" />
+                  <Image src={product.image} alt={product.name} fill sizes="48px" className="object-cover" />
                 ) : (
                   <ImageIcon size={20} className="text-zinc-300" />
                 )}

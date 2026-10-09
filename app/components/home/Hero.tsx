@@ -82,7 +82,7 @@ export default function Hero() {
               alt="LilyPique Floral Arrangements"
               fill
               priority
-              sizes="(max-w-768px) 100vw, 50vw"
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover transition-transform duration-1000 hover:scale-105"
             />
             {/* Soft inner glow overlay */}

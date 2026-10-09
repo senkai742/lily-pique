@@ -1,5 +1,7 @@
 "use client";
 
+import React from "react";
+
 import Image from "next/image";
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Loader2 } from "lucide-react";
@@ -122,10 +124,9 @@ export default function OrdersTable({ orders: initialOrders }: { orders: Order[]
               const remainingCount = items.length - previewItems.length;
 
               return (
-                <>
+                <React.Fragment key={order.id}>
                   {/* Main row */}
                   <tr
-                    key={order.id}
                     onClick={() => toggle(order.id)}
                     className={`cursor-pointer transition-colors group ${
                       isOpen ? "bg-zinc-50/90" : "hover:bg-zinc-50/60"
@@ -318,7 +319,7 @@ export default function OrdersTable({ orders: initialOrders }: { orders: Order[]
                       </td>
                     </tr>
                   )}
-                </>
+                </React.Fragment>
               );
             })
           )}

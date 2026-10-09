@@ -15,6 +15,7 @@ export default function StorySection() {
               src="/images/about.png"
               alt={siteConfig.name}
               fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover transition-transform duration-1000 hover:scale-105"
             />
             <div className="absolute inset-0 rounded-t-[10rem] rounded-b-3xl ring-1 ring-inset ring-white/30 pointer-events-none" />

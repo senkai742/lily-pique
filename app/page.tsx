@@ -12,7 +12,7 @@ export default function HomePage() {
 
       <ProductSection />
 
-      <AboutSection />/
+      <AboutSection />
 
       <ContactSection />
     </>
