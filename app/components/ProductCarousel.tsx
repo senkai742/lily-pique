@@ -3,13 +3,7 @@
 import { useRef, useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import ProductCard from "@/app/components/home/ProductCard";
-
-interface Product {
-  id: string | number;
-  name: string;
-  price: number;
-  image: string;
-}
+import { Product } from "@/app/types/product";
 
 interface ProductCarouselProps {
   products: Product[];
@@ -195,13 +189,7 @@ export default function ProductCarousel({
               snap-start
             "
           >
-            <ProductCard
-              id={product.id}
-              name={product.name}
-              category={categoryTitle}
-              price={product.price}
-              image={product.image}
-            />
+            <ProductCard product={product} />
           </div>
         ))}
       </div>

@@ -1,15 +1,42 @@
-import { Search, Filter, Plus, Edit, Trash2, Image as ImageIcon } from "lucide-react";
-import Image from "next/image";
+import { Search, Filter, Plus } from "lucide-react";
 import Link from "next/link";
+import { createClient } from "@/utils/supabase/server";
+import ProductsTable from "./ProductsTable";
 
-export default function AdminProducts() {
-  const products = [
-    { id: 1, name: "Camel Beige Smart Blazer", category: "Men's Fashion", price: "৳ 12,990", stock: 15, status: "Active", image: "/images/flowerabout.png" },
-    { id: 2, name: "Forest Green Premium Blazer", category: "Men's Fashion", price: "৳ 15,990", stock: 8, status: "Active", image: "/images/flowerabout.png" },
-    { id: 3, name: "Classic Blush Rose Bouquet", category: "Bouquets", price: "৳ 4,500", stock: 24, status: "Active", image: "/images/flowerabout.png" },
-    { id: 4, name: "Vintage Denim Jeans", category: "Women's Fashion", price: "৳ 3,200", stock: 0, status: "Out of Stock", image: "/images/flowerabout.png" },
-    { id: 5, name: "Midnight Elegance Arrangement", category: "Arrangements", price: "৳ 6,200", stock: 5, status: "Draft", image: "/images/flowerabout.png" },
-  ];
+export default async function AdminProducts() {
+  const supabase = await createClient();
+
+  const [
+    { data: productsData, error },
+    { data: variantsData },
+    { data: categoriesData },
+  ] = await Promise.all([
+    supabase.from("products").select("id, name, status, category_id, created_at").order("created_at", { ascending: false }),
+    supabase.from("product_variants").select("id, product_id, price, stock, images"),
+    supabase.from("categories").select("id, name"),
+  ]);
+
+  const categoryMap = Object.fromEntries((categoriesData ?? []).map((c: any) => [c.id, c.name]));
+
+  const products = (productsData ?? []).map((product: any) => {
+    const variants = (variantsData ?? []).filter((v: any) => v.product_id === product.id);
+    const prices = variants.map((v: any) => v.price).filter(Boolean);
+    const displayPrice = prices.length > 0 ? Math.min(...prices) : 0;
+    const totalStock = variants.reduce((sum: number, v: any) => sum + (v.stock || 0), 0);
+    const image = variants[0]?.images?.[0] ?? null;
+    const colors = variants.map((v: any) => ({ name: v.color, hex: v.hex_code })).filter((c: any) => c.name);
+
+    return {
+      id: product.id,
+      name: product.name,
+      category: categoryMap[product.category_id] ?? "Uncategorized",
+      price: `৳ ${displayPrice.toLocaleString("en-BD")}`,
+      stock: totalStock,
+      status: product.status || "Draft",
+      image,
+      colors,
+    };
+  });
 
   return (
     <div className="p-6 md:p-8">
@@ -27,6 +54,12 @@ export default function AdminProducts() {
           </Link>
         </div>
       </div>
+
+      {error && (
+        <div className="mb-6 rounded-lg bg-red-50 p-4 text-sm text-red-600 border border-red-200">
+          Failed to load products. Please make sure your database tables are set up. ({error.message})
+        </div>
+      )}
 
       {/* Table Container */}
       <div className="rounded-2xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
@@ -47,7 +80,6 @@ export default function AdminProducts() {
           </button>
         </div>
 
-        {/* Table */}
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-zinc-50/50 text-zinc-500">
@@ -61,58 +93,17 @@ export default function AdminProducts() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-100 bg-white">
-              {products.map((product) => (
-                <tr key={product.id} className="hover:bg-zinc-50/80 transition-colors group">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-4">
-                      <div className="relative h-12 w-12 rounded-lg border border-zinc-200 bg-zinc-50 overflow-hidden flex-shrink-0 flex items-center justify-center">
-                        {product.image ? (
-                          <Image src={product.image} alt={product.name} fill className="object-cover" />
-                        ) : (
-                          <ImageIcon size={20} className="text-zinc-300" />
-                        )}
-                      </div>
-                      <span className="font-medium text-zinc-900 group-hover:text-blue-600 transition-colors">{product.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-zinc-500">{product.category}</td>
-                  <td className="px-6 py-4 font-medium text-zinc-900">{product.price}</td>
-                  <td className="px-6 py-4">
-                    <span className={`text-sm ${product.stock < 10 && product.stock > 0 ? 'text-orange-600 font-medium' : product.stock === 0 ? 'text-red-600 font-medium' : 'text-zinc-600'}`}>
-                      {product.stock} in stock
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium border
-                      ${product.status === 'Active' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 
-                        product.status === 'Draft' ? 'bg-zinc-100 text-zinc-700 border-zinc-300' : 
-                        'bg-red-50 text-red-700 border-red-200'}
-                    `}>
-                      {product.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button className="rounded-md p-1.5 text-zinc-400 hover:bg-zinc-100 hover:text-blue-600 transition-colors" title="Edit">
-                        <Edit size={16} />
-                      </button>
-                      <button className="rounded-md p-1.5 text-zinc-400 hover:bg-red-50 hover:text-red-600 transition-colors" title="Delete">
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              <ProductsTable initialProducts={products} />
             </tbody>
           </table>
         </div>
 
         {/* Pagination */}
         <div className="border-t border-zinc-100 px-6 py-4 flex items-center justify-between">
-          <p className="text-sm text-zinc-500">Showing 1 to 5 of 48 results</p>
+          <p className="text-sm text-zinc-500">Showing {products.length} {products.length === 1 ? 'result' : 'results'}</p>
           <div className="flex gap-2">
             <button className="rounded-md border border-zinc-200 px-3 py-1 text-sm text-zinc-600 hover:bg-zinc-50 disabled:opacity-50" disabled>Prev</button>
-            <button className="rounded-md border border-zinc-200 px-3 py-1 text-sm text-zinc-600 hover:bg-zinc-50">Next</button>
+            <button className="rounded-md border border-zinc-200 px-3 py-1 text-sm text-zinc-600 hover:bg-zinc-50 disabled:opacity-50" disabled>Next</button>
           </div>
         </div>
 

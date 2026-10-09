@@ -1,11 +1,40 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
-import { categories } from "@/app/data/categories";
+import { ArrowRight, ImageIcon } from "lucide-react";
+import { createClient } from "@/utils/supabase/server";
 
-export default function CategoryShowcase() {
+export default async function CategoryShowcase() {
+  const supabase = await createClient();
+
+  const [
+    { data: dbCategories },
+    { data: dbProducts },
+    { data: dbVariants },
+  ] = await Promise.all([
+    supabase.from("categories").select("*").order("name", { ascending: true }),
+    supabase.from("products").select("id, category_id").ilike("status", "active"),
+    supabase.from("product_variants").select("product_id, images"),
+  ]);
+
+  const categories = (dbCategories ?? []).map((cat) => {
+    // Find the first product in this category
+    const productIds = (dbProducts ?? []).filter((p) => p.category_id === cat.id).map((p) => p.id);
+    
+    // Find the first image from those products
+    const image = (dbVariants ?? [])
+      .filter((v) => productIds.includes(v.product_id))
+      .flatMap((v) => v.images || [])[0] || null;
+
+    return {
+      id: cat.id,
+      name: cat.name,
+      slug: cat.slug,
+      image,
+    };
+  });
+
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section className="py-12 sm:py-24 relative overflow-hidden">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto mb-16 max-w-3xl text-center">
           <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-gold">
@@ -27,19 +56,23 @@ export default function CategoryShowcase() {
               href={`/products?category=${category.slug}`}
               className="group overflow-hidden rounded-[2.5rem] border border-gold/20 bg-white transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-primary/15 hover:border-primary/30"
             >
-              <div className="relative aspect-[4/5] overflow-hidden">
-                <Image
-                  src={category.image}
-                  alt={category.title}
-                  fill
-                  className="object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
-                />
+              <div className="relative aspect-[4/5] overflow-hidden bg-secondary/30 flex items-center justify-center">
+                {category.image ? (
+                  <Image
+                    src={category.image}
+                    alt={category.name}
+                    fill
+                    className="object-cover transition-transform duration-1000 ease-out group-hover:scale-110"
+                  />
+                ) : (
+                  <ImageIcon className="text-primary/30 w-16 h-16" />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
                 
                 <div className="absolute bottom-0 left-0 w-full p-6 pb-8 flex items-end justify-between z-10">
                   <div>
                     <h3 className="text-2xl font-serif text-white tracking-wide">
-                      {category.title}
+                      {category.name}
                     </h3>
                     <p className="mt-1 text-[11px] font-bold uppercase tracking-widest text-gold/80">
                       Browse Collection

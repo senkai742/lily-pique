@@ -184,8 +184,21 @@ export default function CheckoutPage() {
                       <Image src={item.image} alt={item.name} fill className="object-cover" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="truncate text-sm font-medium text-text">{item.name}</p>
-                      <p className="text-xs text-text/50">Qty: {item.quantity}</p>
+                      <p className="truncate text-sm font-medium text-text">
+                        {item.name.replace(` - ${item.color || item.name.split(" - ").pop()}`, '')}
+                      </p>
+                      
+                      {(item.color || item.name.includes(" - ")) && (
+                        <div className="mt-0.5 flex items-center gap-1.5 text-[11px] text-zinc-500">
+                          <span 
+                            className="w-2 h-2 rounded-full border border-black/10" 
+                            style={{ backgroundColor: item.colorHex || '#ccc' }} 
+                          />
+                          <span>{item.color || item.name.split(" - ").pop()}</span>
+                        </div>
+                      )}
+                      
+                      <p className="mt-0.5 text-xs text-text/50">Qty: {item.quantity}</p>
                     </div>
                     <p className="text-sm font-semibold text-text shrink-0">
                       ৳ {(item.price * item.quantity).toLocaleString("en-BD")}

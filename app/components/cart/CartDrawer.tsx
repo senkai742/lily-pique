@@ -95,7 +95,7 @@ export default function CartDrawer() {
                 <div className="flex flex-1 flex-col justify-between py-1">
                   <div className="flex justify-between items-start gap-2">
                     <h3 className="font-serif text-lg leading-tight text-text line-clamp-2">
-                      {item.name}
+                      {item.name.replace(` - ${item.color || item.name.split(" - ").pop()}`, '')}
                     </h3>
                     <button
                       onClick={() => removeFromCart(item.id)}
@@ -104,6 +104,16 @@ export default function CartDrawer() {
                       <Trash2 size={16} />
                     </button>
                   </div>
+                  
+                  {(item.color || item.name.includes(" - ")) && (
+                    <div className="mt-1 flex items-center gap-1.5 text-xs text-zinc-500">
+                      <span 
+                        className="w-2.5 h-2.5 rounded-full border border-black/10" 
+                        style={{ backgroundColor: item.colorHex || '#ccc' }} 
+                      />
+                      <span>{item.color || item.name.split(" - ").pop()}</span>
+                    </div>
+                  )}
                   
                   <div className="flex items-center justify-between mt-2">
                     <div className="flex items-center rounded-full border border-gold/30 bg-white shadow-sm">

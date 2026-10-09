@@ -5,9 +5,12 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 export type CartItem = {
   id: string | number;
   name: string;
+  category: string;
   price: number;
   image: string;
   quantity: number;
+  color?: string;
+  colorHex?: string;
 };
 
 interface CartContextType {

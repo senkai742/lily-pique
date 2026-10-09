@@ -5,7 +5,7 @@ import { siteConfig } from "@/config/site";
 
 export default function StorySection() {
   return (
-    <section className="py-24 overflow-hidden relative">
+    <section className="py-12 sm:py-24 overflow-hidden relative">
       <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2 lg:px-8">
         
         {/* Image */}

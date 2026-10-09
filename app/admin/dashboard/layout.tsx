@@ -11,7 +11,8 @@ import {
   Settings, 
   LogOut,
   Menu,
-  X
+  X,
+  LayoutList
 } from "lucide-react";
 import { useState } from "react";
 
@@ -26,6 +27,7 @@ export default function AdminDashboardLayout({
   const navItems = [
     { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
     { name: "Orders", href: "/admin/dashboard/orders", icon: ShoppingBag },
+    { name: "Categories", href: "/admin/dashboard/categories", icon: LayoutList },
     { name: "Products", href: "/admin/dashboard/products", icon: Package },
     { name: "Customers", href: "/admin/dashboard/customers", icon: Users },
     { name: "Settings", href: "/admin/dashboard/settings", icon: Settings },

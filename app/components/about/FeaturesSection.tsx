@@ -34,7 +34,7 @@ const features = [
 
 export default function FeaturesSection() {
   return (
-    <section className="bg-secondary/10 py-24 relative overflow-hidden">
+    <section className="bg-secondary/10 py-12 sm:py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/5 to-transparent pointer-events-none" />
       <div className="mx-auto max-w-7xl px-6 lg:px-8 relative z-10">
         <div className="mx-auto mb-16 max-w-3xl text-center">

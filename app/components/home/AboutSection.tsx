@@ -4,7 +4,7 @@ import { Flower2, ArrowRight } from "lucide-react";
 
 export default function AboutSection() {
   return (
-    <section className="relative overflow-hidden bg-white py-16 sm:py-24 lg:py-32">
+    <section className="relative overflow-hidden bg-white py-12 sm:py-24 lg:py-32">
       {/* Decorative blurred background blobs */}
       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-secondary/20 rounded-full mix-blend-multiply blur-[120px] opacity-60 pointer-events-none translate-x-1/3 -translate-y-1/3" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-primary/10 rounded-full mix-blend-multiply blur-[100px] opacity-60 pointer-events-none -translate-x-1/3 translate-y-1/3" />

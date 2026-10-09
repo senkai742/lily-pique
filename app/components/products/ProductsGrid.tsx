@@ -1,8 +1,10 @@
 import ProductCard from "@/app/components/home/ProductCard";
 import { products } from "@/app/data/products";
 
+import { Product } from "@/app/types/product";
+
 interface Props {
-  products: typeof products;
+  products: Product[];
 }
 
 export default function ProductGrid({ products }: Props) {
@@ -11,7 +13,7 @@ export default function ProductGrid({ products }: Props) {
       {products.map((product) => (
         <ProductCard
           key={product.id}
-          {...product}
+          product={product}
         />
       ))}
     </div>

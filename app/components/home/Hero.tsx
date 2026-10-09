@@ -5,7 +5,7 @@ import { siteConfig } from "@/config/site";
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden aesthetic-bg lg:flex lg:items-center lg:min-h-[calc(100vh-64px)] py-12 sm:py-20 lg:py-0">
+    <section className="relative overflow-hidden aesthetic-bg lg:flex lg:items-center lg:min-h-[calc(100vh-80px)] pt-8 pb-12 sm:pt-16 sm:pb-20 lg:py-0">
       
       {/* Decorative blurred background blobs */}
       <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/20 rounded-full mix-blend-multiply blur-[100px] opacity-70 pointer-events-none" />

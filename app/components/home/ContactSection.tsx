@@ -4,7 +4,7 @@ import { siteConfig } from "@/config/site";
 
 export default function ContactSection() {
   return (
-    <section className="relative overflow-hidden bg-white py-12 sm:py-16 lg:py-24">
+    <section className="relative overflow-hidden bg-white pt-8 pb-16 sm:py-16 lg:py-24">
 
       {/* Decorative background blobs */}
       <div className="pointer-events-none absolute -top-24 -left-24 h-[500px] w-[500px] rounded-full bg-secondary/30 blur-[130px] opacity-70" />

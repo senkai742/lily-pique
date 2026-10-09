@@ -24,7 +24,7 @@ export default function ContactPage() {
         <Flower2 size={400} strokeWidth={0.5} className="text-primary rotate-12" />
       </div>
 
-      <div className="relative z-10 flex-1 flex flex-col justify-center py-16 sm:py-24 lg:py-32">
+      <div className="relative z-10 flex-1 flex flex-col justify-center py-8 sm:py-16 lg:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 w-full">
           
           <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 items-center">

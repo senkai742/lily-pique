@@ -4,7 +4,7 @@ import { siteConfig } from "@/config/site";
 
 export default function CTASection() {
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8">
+    <section className="py-12 sm:py-24 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-primary via-[#c49ecb] to-[#a070af] px-8 py-20 text-center lg:px-20 shadow-2xl shadow-primary/25 ring-1 ring-white/20">
           

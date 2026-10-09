@@ -24,7 +24,7 @@ export default function Logo({
           width={size * 4}
           height={size * 1.2}
           priority
-          className={`object-contain w-[200px]  sm:w-auto h-auto transition-transform duration-300 group-hover:scale-105 ${
+          className={`object-contain w-[170px] ml-2 sm:w-auto h-auto transition-transform duration-300 group-hover:scale-105 ${
             dark ? "brightness-0 invert opacity-90" : "drop-shadow-sm"
           }`}
         />
