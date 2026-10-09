@@ -32,7 +32,7 @@ function FormField({
         type={type}
         placeholder={placeholder}
         required={required}
-        className="w-full rounded-xl border border-primary/20 bg-white px-4 py-3 text-sm text-text outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
+        className="w-full rounded-xl border border-primary/20 bg-white px-4 py-3 text-sm text-text outline-none transition-all focus:ring-2 focus:ring-primary/20"
       />
     </div>
   );
@@ -50,41 +50,127 @@ function SectionHeading({ number, title }: { number: string; title: string }) {
 }
 
 export default function CheckoutPage() {
-  const { cart, cartTotal } = useCart();
+  const { cart, cartTotal, clearCart } = useCart();
   const [submitted, setSubmitted] = useState(false);
+  const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deliveryZone, setDeliveryZone] = useState<"inside" | "outside">("inside");
 
   const shipping = cart.length > 0 ? (deliveryZone === "inside" ? 60 : 80) : 0;
   const grandTotal = cartTotal + shipping;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    try {
+      const res = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          first_name: data.get("first_name"),
+          last_name: data.get("last_name"),
+          email: data.get("email"),
+          phone: data.get("phone"),
+          address: data.get("address"),
+          city: data.get("city"),
+          district: data.get("district"),
+          postal_code: data.get("postal_code"),
+          note: data.get("note"),
+          delivery_zone: deliveryZone,
+          subtotal: cartTotal,
+          shipping,
+          grand_total: grandTotal,
+          items: cart,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Order failed");
+
+      const result = await res.json();
+      if (result.orderId) {
+        setCreatedOrderId(result.orderId);
+      }
+
+      clearCart();
       setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong placing your order. Please try again.");
+    } finally {
       setLoading(false);
-    }, 1200);
+    }
+  };
+
+  const handleCopyId = () => {
+    if (!createdOrderId) return;
+    navigator.clipboard.writeText(createdOrderId);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   if (submitted) {
+    const displayId = createdOrderId ? `#${createdOrderId.slice(0, 8).toUpperCase()}` : "";
+
     return (
-      <div className="flex min-h-[70vh] flex-col items-center justify-center gap-6 px-4 text-center">
+      <div className="flex min-h-[75vh] flex-col items-center justify-center gap-6 px-4 py-12 text-center">
         <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-50 ring-8 ring-emerald-50/50">
           <CheckCircle2 size={40} className="text-emerald-500" />
         </div>
         <div>
-          <h1 className="text-3xl font-serif font-bold text-text">Order Placed!</h1>
-          <p className="mt-2 text-text/60">
-            Thank you for your purchase. We'll contact you shortly to confirm your order.
+          <span className="inline-block rounded-full bg-primary/10 px-3.5 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
+            Order Confirmed
+          </span>
+          <h1 className="mt-3 text-3xl sm:text-4xl font-serif font-bold text-text">Thank You for Your Order!</h1>
+          <p className="mt-2 text-text/60 max-w-md mx-auto">
+            We&apos;ve received your request and will call you soon to confirm delivery details.
           </p>
         </div>
-        <Link
-          href="/products"
-          className="mt-2 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-text hover:-translate-y-0.5 shadow-md"
-        >
-          Continue Shopping
-        </Link>
+
+        {createdOrderId && (
+          <div className="w-full max-w-md rounded-2xl border border-primary/20 bg-white/80 p-5 backdrop-blur-sm shadow-sm text-left">
+            <div className="text-xs font-semibold uppercase tracking-wider text-text/50">
+              Your Order Reference
+            </div>
+            <div className="mt-2 flex items-center justify-between gap-3 rounded-xl bg-zinc-50 border border-zinc-200/80 px-4 py-3">
+              <div>
+                <span className="font-mono text-lg font-bold text-text">{displayId}</span>
+                <span className="block text-[11px] text-text/40 font-mono break-all">{createdOrderId}</span>
+              </div>
+              <button
+                type="button"
+                onClick={handleCopyId}
+                className="shrink-0 rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-text border border-zinc-200 hover:bg-zinc-100 transition-colors shadow-2xs"
+              >
+                {copied ? "Copied!" : "Copy ID"}
+              </button>
+            </div>
+            <p className="mt-2 text-[11px] text-text/50">
+              Save this ID or your phone number to track your order anytime.
+            </p>
+          </div>
+        )}
+
+        <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
+          {createdOrderId && (
+            <Link
+              href={`/track-order?id=${createdOrderId}`}
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white transition-all hover:bg-text hover:-translate-y-0.5 shadow-md"
+            >
+              Track Order Status
+            </Link>
+          )}
+          <Link
+            href="/products"
+            className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-white/80 px-6 py-3 text-sm font-semibold text-text transition-all hover:bg-zinc-50 shadow-2xs"
+          >
+            Continue Shopping
+          </Link>
+        </div>
       </div>
     );
   }
@@ -142,8 +228,8 @@ export default function CheckoutPage() {
               {/* Delivery Zone Selector */}
               <div className="mb-5 grid grid-cols-2 gap-3">
                 {([
-                  { value: "inside", label: "Inside Dhaka", charge: "৳ 80" },
-                  { value: "outside", label: "Outside Dhaka", charge: "৳ 150" },
+                  { value: "inside", label: "Inside Dhaka", charge: "৳ 60" },
+                  { value: "outside", label: "Outside Dhaka", charge: "৳ 100" },
                 ] as const).map((zone) => (
                   <button
                     key={zone.value}

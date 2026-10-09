@@ -17,6 +17,10 @@ const navItems = [
     title: "Contact",
     href: "/contact",
   },
+  {
+    title: "Track Order",
+    href: "/track-order",
+  },
 ];
 
 export default navItems;
