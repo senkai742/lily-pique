@@ -8,6 +8,7 @@ import { siteConfig } from "@/config/site";
 import navItems from "@/config/navItems";
 import Logo from "./Logo";
 import { useCart } from "@/app/context/CartContext";
+import SearchModal from "./SearchModal";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -51,7 +52,7 @@ export default function Navbar() {
         </nav>
 
         {/* Actions Container */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1.5 sm:gap-3">
           
           {/* Desktop CTA */}
           <div className="hidden md:block">
@@ -64,10 +65,13 @@ export default function Navbar() {
             </Link>
           </div>
 
+          {/* Search Button & Modal */}
+          <SearchModal />
+
           {/* Cart Button */}
           <button
             onClick={() => setIsDrawerOpen(true)}
-            className="relative flex h-11 w-11 items-center justify-center rounded-full bg-secondary/30 text-primary transition-all duration-200 hover:bg-secondary active:scale-95 border border-primary/20"
+            className="relative flex h-10 w-10 items-center justify-center rounded-full bg-secondary/30 text-primary transition-all duration-200 hover:bg-secondary active:scale-95 border border-primary/20"
             aria-label="Open Cart"
           >
             <ShoppingBag size={20} />
@@ -82,7 +86,7 @@ export default function Navbar() {
           <button
             onClick={() => setOpen(!open)}
             aria-label="Toggle Menu"
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-gold bg-background text-text shadow-sm transition-all duration-200 hover:bg-secondary hover:border-primary active:scale-95 md:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-xl border border-gold bg-background text-text shadow-sm transition-all duration-200 hover:bg-secondary hover:border-primary active:scale-95 md:hidden"
           >
             {open ? (
               <X size={24} strokeWidth={2.5} />

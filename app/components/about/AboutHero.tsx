@@ -3,7 +3,7 @@ import { Flower2, ChevronRight } from "lucide-react";
 
 export default function AboutHero() {
   return (
-    <section className="relative overflow-hidden bg-background pt-8 pb-10 sm:pt-16 lg:pt-25 lg:pb-24 border-b border-gold/10">
+    <section className="relative overflow-hidden bg-background pt-8 pb-10 sm:pt-16 lg:pt-14 lg:pb-24 border-b border-gold/10">
       {/* Decorative background blobs */}
       <div className="pointer-events-none absolute top-0 left-0 h-[400px] w-[400px] -translate-y-1/2 -translate-x-1/3 rounded-full bg-primary/10 blur-[100px] opacity-60" />
       <div className="pointer-events-none absolute bottom-0 right-0 h-[300px] w-[300px] translate-y-1/3 translate-x-1/3 rounded-full bg-secondary/40 blur-[80px] opacity-60" />

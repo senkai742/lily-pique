@@ -8,6 +8,7 @@ import { Product } from "@/app/types/product";
 interface Props {
   searchParams: Promise<{
     category?: string;
+    q?: string;
   }>;
 }
 
@@ -16,7 +17,7 @@ export const dynamic = "force-dynamic";
 export default async function ProductsPage({
   searchParams,
 }: Props) {
-  const { category } = await searchParams;
+  const { category, q } = await searchParams;
   const supabase = await createClient();
 
   const [
@@ -60,6 +61,16 @@ export default async function ProductsPage({
     products = products.filter((p) => p.categorySlug === category);
   }
 
+  if (q && q.trim()) {
+    const queryTerm = q.trim().toLowerCase();
+    products = products.filter(
+      (p) =>
+        p.name.toLowerCase().includes(queryTerm) ||
+        p.description.toLowerCase().includes(queryTerm) ||
+        p.category.toLowerCase().includes(queryTerm)
+    );
+  }
+
   return (
     <div className="relative bg-background overflow-hidden min-h-screen">
       {/* Decorative page background */}
@@ -72,6 +83,20 @@ export default async function ProductsPage({
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 
           <CategoryFilter active={category} categories={categories} />
+
+          {q && (
+            <div className="mb-6 flex items-center justify-between rounded-2xl border border-primary/20 bg-secondary/30 px-5 py-3 text-sm">
+              <span className="text-text/80">
+                Search results for <span className="font-bold text-text">&ldquo;{q}&rdquo;</span> ({products.length} found)
+              </span>
+              <a
+                href={category ? `/products?category=${category}` : "/products"}
+                className="text-xs font-semibold text-primary hover:underline"
+              >
+                Clear Search
+              </a>
+            </div>
+          )}
 
           {products.length ? (
             <ProductGrid products={products} />

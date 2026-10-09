@@ -30,7 +30,7 @@ export default function ContactPage() {
           <div className="grid gap-16 lg:grid-cols-2 lg:gap-24 items-center">
             
             {/* Left: Content Info */}
-            <div className="order-2 lg:order-1 space-y-10">
+            <div className="order-1 space-y-10">
               
               <div>
                 <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-secondary/30 backdrop-blur-sm px-4 py-1.5 shadow-sm">
@@ -131,13 +131,14 @@ export default function ContactPage() {
 
             </div>
 
-            {/* Right: Elegant Image (Replaced Map) */}
-            <div className="order-1 lg:order-2 relative w-full max-w-md mx-auto lg:max-w-none">
+            {/* Right: Elegant Image (Hidden on mobile for clean layout, visible on desktop) */}
+            <div className="hidden lg:block relative w-full max-w-md mx-auto lg:max-w-none">
               <div className="relative aspect-[3/4] overflow-hidden rounded-t-[12rem] rounded-b-[2rem] bg-secondary shadow-2xl ring-1 ring-gold/20">
                 <Image
                   src="/images/flowerabout.png"
                   alt="Contact LilyPique"
                   fill
+                  sizes="(min-width: 1024px) 50vw, 100vw"
                   className="object-cover transition-transform duration-1000 hover:scale-105"
                 />
                 <div className="absolute inset-0 rounded-t-[12rem] rounded-b-[2rem] ring-1 ring-inset ring-white/30 pointer-events-none" />
