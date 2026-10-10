@@ -16,12 +16,14 @@ export default function Hero() {
         
         {/* Left Column (Content) */}
         <div className="space-y-8 sm:space-y-10 lg:pr-8">
+
+          <Image src="/images/logo.png" alt="LilyPique" width={150} height={150} className="mx-auto md:mx-0" />
           
           {/* Eyebrow Badge */}
           <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-white/40 backdrop-blur-md px-4 py-1.5 shadow-sm">
             <Flower2 size={14} className="text-primary" />
             <span className="text-[10px] font-bold uppercase tracking-widest text-text">
-              Premium Floral Collection
+              Gift Worthy Premium Bouquet 
             </span>
           </div>
 

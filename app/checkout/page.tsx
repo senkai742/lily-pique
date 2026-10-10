@@ -55,9 +55,7 @@ export default function CheckoutPage() {
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [deliveryZone, setDeliveryZone] = useState<"inside" | "outside">("inside");
-
-  const shipping = cart.length > 0 ? (deliveryZone === "inside" ? 60 : 80) : 0;
+  const shipping = cart.length > 0 ? 120 : 0;
   const grandTotal = cartTotal + shipping;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -81,7 +79,7 @@ export default function CheckoutPage() {
           district: data.get("district"),
           postal_code: data.get("postal_code"),
           note: data.get("note"),
-          delivery_zone: deliveryZone,
+          delivery_zone: "inside",
           subtotal: cartTotal,
           shipping,
           grand_total: grandTotal,
@@ -225,26 +223,13 @@ export default function CheckoutPage() {
             <div className="rounded-2xl border border-primary/10 bg-white/80 backdrop-blur-sm p-7 shadow-sm">
               <SectionHeading number="2" title="Delivery Address" />
 
-              {/* Delivery Zone Selector */}
-              <div className="mb-5 grid grid-cols-2 gap-3">
-                {([
-                  { value: "inside", label: "Inside Dhaka", charge: "৳ 60" },
-                  { value: "outside", label: "Outside Dhaka", charge: "৳ 100" },
-                ] as const).map((zone) => (
-                  <button
-                    key={zone.value}
-                    type="button"
-                    onClick={() => setDeliveryZone(zone.value)}
-                    className={`flex flex-col items-start rounded-xl border p-4 text-left transition-all ${
-                      deliveryZone === zone.value
-                        ? "border-primary bg-primary/5 ring-1 ring-primary/30"
-                        : "border-primary/20 hover:border-primary/40"
-                    }`}
-                  >
-                    <span className="text-sm font-semibold text-text">{zone.label}</span>
-                    <span className="text-xs text-text/50">Delivery: {zone.charge}</span>
-                  </button>
-                ))}
+              {/* Delivery info banner */}
+              <div className="mb-5 flex items-center gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
+                <span className="text-lg">🚚</span>
+                <div>
+                  <p className="text-sm font-semibold text-text">Inside Dhaka Delivery Only</p>
+                  <p className="text-xs text-text/50">We currently deliver within Dhaka — ৳120</p>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">

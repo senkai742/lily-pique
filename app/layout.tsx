@@ -19,8 +19,8 @@ export const metadata: Metadata = {
   title: "LilyPique",
   description: "Premium clothing and apparel for modern lifestyles",
   icons: {
-    icon: "/images/flowerlogo.png",
-    apple: "/images/flowerlogo.png",
+    icon: "/images/logo.png",
+    apple: "/images/logo.png",
   }
 };
 

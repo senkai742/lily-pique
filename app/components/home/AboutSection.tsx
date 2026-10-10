@@ -15,7 +15,7 @@ export default function AboutSection() {
         <div className="relative order-2 lg:order-1 mt-10 lg:mt-0 px-4 sm:px-0">
           <div className="relative mx-auto w-full max-w-md lg:max-w-none aspect-[4/5] overflow-hidden rounded-t-[12rem] rounded-b-3xl bg-secondary shadow-2xl shadow-primary/10 ring-1 ring-gold/20">
             <Image
-              src="/images/flowerabout.png"
+              src="/images/about.png"
               alt="LilyPique Floral Studio"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
