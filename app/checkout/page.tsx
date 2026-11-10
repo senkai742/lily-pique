@@ -4,7 +4,7 @@ import { useCart } from "@/app/context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowLeft, ShoppingBag, CheckCircle2, Banknote, Smartphone, Check } from "lucide-react";
+import { ArrowLeft, ShoppingBag, CheckCircle2, Banknote, Check } from "lucide-react";
 
 function FormField({
   label,
@@ -306,7 +306,7 @@ export default function CheckoutPage() {
                 <legend className="mb-3 text-sm font-semibold text-text">Payment method</legend>
                 {[
                   { value: "cod", label: "Cash on Delivery", description: "Pay in cash when your order arrives.", Icon: Banknote },
-                  { value: "bkash", label: "bKash", description: "Pay now with your bKash account.", Icon: Smartphone },
+                  { value: "bkash", label: "bKash", description: "Pay now with your bKash account.", Icon: Banknote },
                 ].map(({ value, label, description, Icon }) => (
                   <label key={value} className="group block cursor-pointer">
                     <input
@@ -320,7 +320,11 @@ export default function CheckoutPage() {
                     />
                     <span className="flex items-center gap-3 rounded-2xl border border-primary/15 bg-white p-4 transition-colors group-hover:border-primary/40 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-sm peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-primary">
                       <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${value === "bkash" ? "bg-[#e2136e]/10 text-[#e2136e]" : "bg-primary/10 text-primary"}`}>
-                        <Icon size={22} strokeWidth={1.7} aria-hidden="true" />
+                        {value === "bkash" ? (
+                          <Image src="/images/bkash.svg" alt="" width={44} height={32} className="h-auto w-11" />
+                        ) : (
+                          <Icon size={22} strokeWidth={1.7} aria-hidden="true" />
+                        )}
                       </span>
                       <span className="min-w-0 flex-1">
                         <span className={`block text-sm font-semibold ${value === "bkash" ? "text-[#e2136e]" : "text-text"}`}>{label}</span>
