@@ -11,7 +11,7 @@ export default async function AdminOrders() {
       id, created_at,
       first_name, last_name, email, phone,
       address, city, district, postal_code, note,
-      delivery_zone, subtotal, shipping, grand_total, status,
+      delivery_zone, subtotal, shipping, grand_total, status, payment_method, payment_status,
       order_items (
         id, product_name, color, color_hex, image, price, quantity
       )

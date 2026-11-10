@@ -34,6 +34,8 @@ export type Order = {
   shipping: number;
   grand_total: number;
   status: string;
+  payment_method: string;
+  payment_status: string;
   order_items: OrderItem[];
 };
 
@@ -103,6 +105,7 @@ export default function OrdersTable({ orders: initialOrders }: { orders: Order[]
             <th className="px-4 py-4 font-medium whitespace-nowrap">Ordered Items</th>
             <th className="px-4 py-4 font-medium whitespace-nowrap">Delivery</th>
             <th className="px-4 py-4 font-medium whitespace-nowrap">Total</th>
+            <th className="px-4 py-4 font-medium whitespace-nowrap">Payment</th>
             <th className="px-4 py-4 font-medium whitespace-nowrap">Status</th>
             <th className="px-4 py-4 font-medium whitespace-nowrap text-right">Details</th>
           </tr>
@@ -110,7 +113,7 @@ export default function OrdersTable({ orders: initialOrders }: { orders: Order[]
         <tbody className="divide-y divide-zinc-100 bg-white">
           {orders.length === 0 ? (
             <tr>
-              <td colSpan={8} className="px-6 py-16 text-center text-zinc-400">
+              <td colSpan={9} className="px-6 py-16 text-center text-zinc-400">
                 No orders yet.
               </td>
             </tr>
@@ -202,6 +205,11 @@ export default function OrdersTable({ orders: initialOrders }: { orders: Order[]
                       </div>
                     </td>
 
+                    <td className="px-4 py-4 text-xs whitespace-nowrap">
+                      <div>{order.payment_method === "bkash" ? "bKash" : "Cash on Delivery"}</div>
+                      <div className="capitalize text-zinc-500">{order.payment_status}</div>
+                    </td>
+
                     <td 
                       className="px-4 py-4"
                       onClick={(e) => e.stopPropagation()}
@@ -247,7 +255,7 @@ export default function OrdersTable({ orders: initialOrders }: { orders: Order[]
                   {/* Expanded items row */}
                   {isOpen && (
                     <tr key={`${order.id}-items`} className="bg-zinc-50/60">
-                      <td colSpan={8} className="px-8 pb-5 pt-3">
+                      <td colSpan={9} className="px-8 pb-5 pt-3">
                         <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-400">
                           Order Items
                         </div>

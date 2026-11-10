@@ -4,7 +4,7 @@ import { useCart } from "@/app/context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowLeft, ShoppingBag, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, ShoppingBag, CheckCircle2, Banknote, Smartphone, Check } from "lucide-react";
 
 function FormField({
   label,
@@ -51,6 +51,8 @@ function SectionHeading({ number, title }: { number: string; title: string }) {
 
 export default function CheckoutPage() {
   const { cart, cartTotal, clearCart } = useCart();
+  const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -60,6 +62,8 @@ export default function CheckoutPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (loading) return;
+    setError("");
     setLoading(true);
 
     const form = e.currentTarget;
@@ -84,12 +88,17 @@ export default function CheckoutPage() {
           shipping,
           grand_total: grandTotal,
           items: cart,
+          payment_method: paymentMethod,
         }),
       });
 
-      if (!res.ok) throw new Error("Order failed");
-
       const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Order failed");
+      if (result.paymentUrl) {
+        sessionStorage.setItem(`payment-cart-${result.orderId}`, JSON.stringify(cart));
+        window.location.assign(result.paymentUrl);
+        return;
+      }
       if (result.orderId) {
         setCreatedOrderId(result.orderId);
       }
@@ -98,7 +107,7 @@ export default function CheckoutPage() {
       setSubmitted(true);
     } catch (err) {
       console.error(err);
-      alert("Something went wrong placing your order. Please try again.");
+      setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -293,17 +302,45 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              <div className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-zinc-50 border border-primary/10 px-4 py-2.5">
-                <span className="text-base text-primary font-bold">৳</span>
-                <span className="text-xs font-medium text-text/60">Cash on Delivery</span>
-              </div>
+              <fieldset className="mt-6 min-w-0 space-y-3">
+                <legend className="mb-3 text-sm font-semibold text-text">Payment method</legend>
+                {[
+                  { value: "cod", label: "Cash on Delivery", description: "Pay in cash when your order arrives.", Icon: Banknote },
+                  { value: "bkash", label: "bKash", description: "Pay now with your bKash account.", Icon: Smartphone },
+                ].map(({ value, label, description, Icon }) => (
+                  <label key={value} className="group block cursor-pointer">
+                    <input
+                      type="radio"
+                      name="payment_method"
+                      value={value}
+                      checked={paymentMethod === value}
+                      onChange={() => setPaymentMethod(value)}
+                      aria-describedby={`payment-${value}-description`}
+                      className="peer sr-only"
+                    />
+                    <span className="flex items-center gap-3 rounded-2xl border border-primary/15 bg-white p-4 transition-colors group-hover:border-primary/40 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-sm peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-primary">
+                      <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${value === "bkash" ? "bg-[#e2136e]/10 text-[#e2136e]" : "bg-primary/10 text-primary"}`}>
+                        <Icon size={22} strokeWidth={1.7} aria-hidden="true" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className={`block text-sm font-semibold ${value === "bkash" ? "text-[#e2136e]" : "text-text"}`}>{label}</span>
+                        <span id={`payment-${value}-description`} className="mt-1 block text-xs leading-relaxed text-text/60">{description}</span>
+                      </span>
+                      <span aria-hidden="true" className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors ${paymentMethod === value ? "border-primary bg-primary text-white" : "border-primary/25 bg-white"}`}>
+                        {paymentMethod === value && <Check size={13} strokeWidth={3} />}
+                      </span>
+                    </span>
+                  </label>
+                ))}
+              </fieldset>
+              {error && <p role="alert" className="mt-3 text-sm text-red-600">{error}</p>}
 
               <button
                 type="submit"
                 disabled={loading}
                 className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3.5 text-sm font-bold uppercase tracking-widest text-white shadow-md transition-all hover:bg-text hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-70 active:scale-95"
               >
-                {loading ? "Placing Order..." : "Place Order"}
+                {loading ? "Please wait..." : paymentMethod === "bkash" ? "Pay with bKash" : "Place Order"}
               </button>
 
               <p className="mt-3 text-center text-xs text-text/40">
