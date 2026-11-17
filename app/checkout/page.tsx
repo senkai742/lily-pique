@@ -4,7 +4,8 @@ import { useCart } from "@/app/context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { ArrowLeft, ShoppingBag, CheckCircle2, Banknote, Check } from "lucide-react";
+import { deliveryCharges, orderPolicies } from "@/config/order-policy";
+import { ArrowLeft, ShoppingBag, CheckCircle2, Smartphone, Check } from "lucide-react";
 
 function FormField({
   label,
@@ -51,13 +52,14 @@ function SectionHeading({ number, title }: { number: string; title: string }) {
 
 export default function CheckoutPage() {
   const { cart, cartTotal, clearCart } = useCart();
-  const [paymentMethod, setPaymentMethod] = useState("cod");
+  const [paymentMethod, setPaymentMethod] = useState("bkash");
   const [error, setError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
-  const shipping = cart.length > 0 ? 120 : 0;
+  const [deliveryZone, setDeliveryZone] = useState<keyof typeof deliveryCharges>("inside");
+  const shipping = cart.length > 0 ? deliveryCharges[deliveryZone] : 0;
   const grandTotal = cartTotal + shipping;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -83,7 +85,8 @@ export default function CheckoutPage() {
           district: data.get("district"),
           postal_code: data.get("postal_code"),
           note: data.get("note"),
-          delivery_zone: "inside",
+          delivery_zone: deliveryZone,
+          policy_accepted: data.get("policy_accepted") === "on",
           subtotal: cartTotal,
           shipping,
           grand_total: grandTotal,
@@ -232,13 +235,14 @@ export default function CheckoutPage() {
             <div className="rounded-2xl border border-primary/10 bg-white/80 backdrop-blur-sm p-7 shadow-sm">
               <SectionHeading number="2" title="Delivery Address" />
 
-              {/* Delivery info banner */}
-              <div className="mb-5 flex items-center gap-3 rounded-xl border border-primary/20 bg-primary/5 px-4 py-3">
-                <span className="text-lg">🚚</span>
-                <div>
-                  <p className="text-sm font-semibold text-text">Inside Dhaka Delivery Only</p>
-                  <p className="text-xs text-text/50">We currently deliver within Dhaka — ৳120</p>
-                </div>
+              <div className="mb-5">
+                <label htmlFor="delivery_zone" className="mb-1.5 block text-sm font-medium text-text/70">Delivery area</label>
+                <select id="delivery_zone" name="delivery_zone" value={deliveryZone}
+                  onChange={(event) => setDeliveryZone(event.target.value as keyof typeof deliveryCharges)}
+                  className="w-full rounded-xl border border-primary/20 bg-white px-4 py-3 text-sm text-text focus:outline-2 focus:outline-primary">
+                  <option value="inside">Inside Dhaka — ৳{deliveryCharges.inside}</option>
+                  <option value="outside">Outside Dhaka — ৳{deliveryCharges.outside}</option>
+                </select>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -305,8 +309,8 @@ export default function CheckoutPage() {
               <fieldset className="mt-6 min-w-0 space-y-3">
                 <legend className="mb-3 text-sm font-semibold text-text">Payment method</legend>
                 {[
-                  { value: "cod", label: "Cash on Delivery", description: "Pay in cash when your order arrives.", Icon: Banknote },
-                  { value: "bkash", label: "bKash", description: "Pay now with your bKash account.", Icon: Banknote },
+                  { value: "bkash", label: "bKash", description: "Pay now with your bKash account.", Icon: Smartphone },
+                  { value: "nagad", label: "Nagad", description: "Pay now with your Nagad account.", Icon: Smartphone },
                 ].map(({ value, label, description, Icon }) => (
                   <label key={value} className="group block cursor-pointer">
                     <input
@@ -319,7 +323,7 @@ export default function CheckoutPage() {
                       className="peer sr-only"
                     />
                     <span className="flex items-center gap-3 rounded-2xl border border-primary/15 bg-white p-4 transition-colors group-hover:border-primary/40 peer-checked:border-primary peer-checked:bg-primary/5 peer-checked:shadow-sm peer-focus-visible:outline-2 peer-focus-visible:outline-offset-4 peer-focus-visible:outline-primary">
-                      <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${value === "bkash" ? "bg-[#e2136e]/10 text-[#e2136e]" : "bg-primary/10 text-primary"}`}>
+                      <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${value === "bkash" ? "bg-[#e2136e]/10 text-[#e2136e]" : "bg-orange-50 text-orange-600"}`}>
                         {value === "bkash" ? (
                           <Image src="/images/bkash.svg" alt="" width={44} height={32} className="h-auto w-11" />
                         ) : (
@@ -327,7 +331,7 @@ export default function CheckoutPage() {
                         )}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className={`block text-sm font-semibold ${value === "bkash" ? "text-[#e2136e]" : "text-text"}`}>{label}</span>
+                        <span className={`block text-sm font-semibold ${value === "bkash" ? "text-[#e2136e]" : "text-orange-600"}`}>{label}</span>
                         <span id={`payment-${value}-description`} className="mt-1 block text-xs leading-relaxed text-text/60">{description}</span>
                       </span>
                       <span aria-hidden="true" className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border transition-colors ${paymentMethod === value ? "border-primary bg-primary text-white" : "border-primary/25 bg-white"}`}>
@@ -337,6 +341,16 @@ export default function CheckoutPage() {
                   </label>
                 ))}
               </fieldset>
+              <div className="mt-5 rounded-xl border border-primary/15 bg-primary/5 p-4">
+                <p className="mb-3 text-sm font-semibold text-text">Before placing your order</p>
+                <ul className="space-y-2 text-xs leading-relaxed text-text/70">
+                  {orderPolicies.map(({ title, text }) => <li key={title}><strong>{title}:</strong> {text}</li>)}
+                </ul>
+              </div>
+              <div className="mt-4 flex items-start gap-2.5 text-xs leading-relaxed text-text/70">
+                <input id="policy_accepted" name="policy_accepted" type="checkbox" required className="mt-0.5 h-4 w-4 shrink-0 accent-primary" />
+                <label htmlFor="policy_accepted">I agree to the <Link href="/delivery-returns" target="_blank" rel="noopener noreferrer" className="font-medium text-primary underline">delivery, payment and return policies</Link>.</label>
+              </div>
               {error && <p role="alert" className="mt-3 text-sm text-red-600">{error}</p>}
 
               <button
@@ -344,7 +358,7 @@ export default function CheckoutPage() {
                 disabled={loading}
                 className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3.5 text-sm font-bold uppercase tracking-widest text-white shadow-md transition-all hover:bg-text hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-70 active:scale-95"
               >
-                {loading ? "Please wait..." : paymentMethod === "bkash" ? "Pay with bKash" : "Place Order"}
+                {loading ? "Please wait..." : paymentMethod === "bkash" ? "Pay with bKash" : "Pay with Nagad"}
               </button>
 
               <p className="mt-3 text-center text-xs text-text/40">

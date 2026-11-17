@@ -323,7 +323,7 @@ function TrackOrderContent() {
 
                     <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-text/60">
                       <div>
-                        Delivery: <span className="capitalize font-medium text-text">{order.delivery_zone} Dhaka (Cash on Delivery)</span>
+                        Delivery: <span className="capitalize font-medium text-text">{order.delivery_zone} Dhaka</span>
                       </div>
                       <div className="flex gap-4">
                         <span>Subtotal: ৳ {Number(order.subtotal).toLocaleString("en-BD")}</span>

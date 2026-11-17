@@ -7,11 +7,11 @@ const ts = require('typescript');
 function fixture(overrides = {}, orderOverrides = {}, updateFails = false) {
   let updates = 0;
   let requests = 0;
-  const order = { id: 'order-1', grand_total: 620, payment_status: 'pending', ...orderOverrides };
+  const order = { id: 'order-1', grand_total: 620, payment_status: 'pending', payment_method: 'bkash', ...orderOverrides };
   const payment = { status: 'COMPLETED', transaction_id: 'txn-1', amount: '620.00', currency: 'BDT',
     payment_method: 'bkash', metadata: { order_id: 'order-1', payment_token: 'token-1' }, ...overrides };
   const query = {
-    select() { return this; }, eq() { return this; },
+    select() { return this; }, in() { return this; }, eq() { return this; },
     single: async () => ({ data: order, error: null }),
     update() { updates++; return this; },
     then(resolve) { resolve({ error: updateFails ? new Error('database unavailable') : null }); },
@@ -50,4 +50,13 @@ test('repeated confirmation does not write again', async () => {
 });
 test('failed database writes do not report success', async () => {
   const f = fixture({}, {}, true); await assert.rejects(f.verify);
+});
+
+test('matching completed Nagad payment is saved', async () => {
+  const f = fixture({ payment_method: 'nagad' }, { payment_method: 'nagad' });
+  assert.equal(await f.verify(), true); assert.equal(f.updates(), 1);
+});
+test('rejects bKash payment for a Nagad order', async () => {
+  const f = fixture({}, { payment_method: 'nagad' });
+  await assert.rejects(f.verify); assert.equal(f.updates(), 0);
 });

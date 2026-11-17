@@ -49,7 +49,7 @@ export default function PaymentResultPage() {
     return () => { active = false; };
   }, [retry]);
   return <main className="mx-auto min-h-[65vh] max-w-xl px-6 py-20 text-center">
-    <h1 className="text-3xl font-serif">bKash Payment</h1>
+    <h1 className="text-3xl font-serif">Payment status</h1>
     <p role="status" className="my-6">{message}</p>
     {orderId && <p className="mb-6 break-all">Order reference: {orderId}</p>}
     <div className="flex flex-wrap justify-center gap-6">

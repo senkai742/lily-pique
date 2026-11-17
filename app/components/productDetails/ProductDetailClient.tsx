@@ -166,7 +166,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           <div className="mb-8 flex flex-col gap-3 text-sm text-zinc-600">
             <div className="flex items-center gap-3">
               <Truck size={18} className="text-primary" />
-              <span>Cash On Delivery (COD) Available</span>
+              <span>Advance Payment Required · No Cash on Delivery</span>
             </div>
             <div className="flex items-center gap-3">
               <FileText size={18} className="text-primary" />
@@ -179,6 +179,10 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           </div>
           
           <div className="mt-auto pt-4 flex flex-col gap-3">
+            <div className="rounded-xl border border-primary/15 bg-primary/5 p-4 text-xs leading-relaxed text-text/70">
+              <p>Order at least 4 days before your delivery or event date. Advance payment required. Fresh flowers and custom handmade items cannot be returned.</p>
+              <Link href="/delivery-returns" className="mt-2 inline-block font-medium text-primary underline">Delivery charges &amp; order policies</Link>
+            </div>
             <button
               onClick={handleAddToCart}
               className="flex w-full items-center justify-center gap-2 rounded-full bg-primary px-6 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-md transition-all hover:bg-text hover:shadow-lg active:scale-[0.98]"

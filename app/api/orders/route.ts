@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { orderDatabase, paymentOrigin, rupantorRequest } from "@/lib/rupantorpay";
+import { deliveryCharges } from "@/config/order-policy";
 import { randomUUID } from "node:crypto";
 
 export async function POST(req: NextRequest) {
@@ -19,15 +20,20 @@ export async function POST(req: NextRequest) {
       items,
     } = body;
 
-    const paymentMethod = body.payment_method ?? "cod";
-    if (!["cod", "bkash"].includes(paymentMethod) ||
+    const deliveryZone = body.delivery_zone;
+    if ((deliveryZone !== "inside" && deliveryZone !== "outside") || body.policy_accepted !== true) {
+      return NextResponse.json({ error: "Please select a delivery area and agree to the order policies." }, { status: 400 });
+    }
+
+    const paymentMethod = body.payment_method ?? "bkash";
+    if (!["bkash", "nagad"].includes(paymentMethod) ||
         ![first_name, last_name, email, phone, address, city, district, postal_code]
           .every(value => typeof value === "string" && value.trim().length > 0 && value.length <= 500) ||
         !Array.isArray(items) || items.length === 0 || items.length > 100) {
       return NextResponse.json({ error: "Please check your contact details and cart." }, { status: 400 });
     }
-    if (paymentMethod === "bkash" && (!process.env.RUPANTORPAY_API_KEY || !process.env.SITE_URL)) {
-      return NextResponse.json({ error: "bKash payment is currently unavailable. Please choose cash on delivery." }, { status: 503 });
+    if (!process.env.RUPANTORPAY_API_KEY || !process.env.SITE_URL) {
+      return NextResponse.json({ error: "Online payment is currently unavailable. Please try again later." }, { status: 503 });
     }
     const pricedItems = [];
     for (const item of items) {
@@ -49,9 +55,9 @@ export async function POST(req: NextRequest) {
         price: Number(variant.price), quantity: item.quantity });
     }
     const subtotal = pricedItems.reduce((sum, item) => sum + Math.round(item.price * 100) * item.quantity, 0) / 100;
-    const shipping = 120;
+    const shipping = deliveryCharges[deliveryZone as keyof typeof deliveryCharges];
     const grand_total = subtotal + shipping;
-    const paymentToken = paymentMethod === "bkash" ? randomUUID() : null;
+    const paymentToken = randomUUID();
 
     // Insert the order
     const { data: order, error: orderError } = await supabase
@@ -66,13 +72,13 @@ export async function POST(req: NextRequest) {
         district,
         postal_code,
         note: note || null,
-        delivery_zone: "inside",
+        delivery_zone: deliveryZone,
         subtotal,
         shipping,
         grand_total,
         status: "pending",
         payment_method: paymentMethod,
-        payment_status: paymentMethod === "bkash" ? "pending" : "unpaid",
+        payment_status: "pending",
         payment_token: paymentToken,
       })
       .select("id")
@@ -105,7 +111,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Failed to save order items" }, { status: 500 });
     }
 
-    if (paymentMethod === "bkash") {
+    {
       try {
         const origin = paymentOrigin();
         const params = new URLSearchParams({ order: order.id, token: paymentToken! });
@@ -122,11 +128,10 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ orderId: order.id, paymentUrl: paymentUrl.href }, { status: 201 });
       } catch {
         // Retain the order: a provider timeout can occur after a payment session is created.
-        return NextResponse.json({ error: "Unable to start bKash payment. Please try again.", orderId: order.id }, { status: 502 });
+        return NextResponse.json({ error: "Unable to start payment. Please try again.", orderId: order.id }, { status: 502 });
       }
     }
 
-    return NextResponse.json({ orderId: order.id }, { status: 201 });
   } catch (err) {
     console.error("Unexpected error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

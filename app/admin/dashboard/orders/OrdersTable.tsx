@@ -206,7 +206,7 @@ export default function OrdersTable({ orders: initialOrders }: { orders: Order[]
                     </td>
 
                     <td className="px-4 py-4 text-xs whitespace-nowrap">
-                      <div>{order.payment_method === "bkash" ? "bKash" : "Cash on Delivery"}</div>
+                      <div>{order.payment_method === "bkash" ? "bKash" : order.payment_method === "nagad" ? "Nagad" : "Cash on Delivery"}</div>
                       <div className="capitalize text-zinc-500">{order.payment_status}</div>
                     </td>
 

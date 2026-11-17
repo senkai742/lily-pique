@@ -89,7 +89,7 @@ export default function Footer() {
               Explore
             </h3>
             <ul className="space-y-3">
-              {navItems.map((item) => (
+              {[...navItems, { title: "Delivery & Returns", href: "/delivery-returns" }].map((item) => (
                 <li key={item.title}>
                   <Link
                     href={item.href}

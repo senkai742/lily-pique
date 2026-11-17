@@ -28,15 +28,15 @@ export async function rupantorRequest(endpoint: string, body: Record<string, unk
 export async function verifyOrderPayment(orderId: string, token: string, transactionId: string) {
   const db = orderDatabase();
   const { data: order, error } = await db.from("orders")
-    .select("id, grand_total, payment_status, payment_token, payment_transaction_id")
-    .eq("id", orderId).eq("payment_method", "bkash").eq("payment_token", token).single();
+    .select("id, grand_total, payment_status, payment_method, payment_token, payment_transaction_id")
+    .eq("id", orderId).in("payment_method", ["bkash", "nagad"]).eq("payment_token", token).single();
   if (error || !order) throw new Error("Payment order not found");
   if (order.payment_status === "paid") return true;
   const payment = await rupantorRequest("verify-payment", { transaction_id: transactionId });
   const metadata = typeof payment.metadata === "string" ? JSON.parse(payment.metadata) : payment.metadata;
   if (payment.status !== "COMPLETED") return false;
   if (payment.transaction_id !== transactionId || payment.currency !== "BDT" ||
-      payment.payment_method?.toLowerCase() !== "bkash" || metadata?.order_id !== orderId ||
+      payment.payment_method?.toLowerCase() !== order.payment_method || metadata?.order_id !== orderId ||
       metadata?.payment_token !== token || !Number.isFinite(Number(payment.amount)) ||
       Math.round(Number(payment.amount) * 100) !== Math.round(Number(order.grand_total) * 100)) {
     throw new Error("Payment details do not match order");
