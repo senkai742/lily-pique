@@ -3,8 +3,9 @@
 import { useCart } from "@/app/context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { deliveryCharges, orderPolicies } from "@/config/order-policy";
+import { earliestDeliveryDate, vipDiscount } from "@/config/vip";
 import { ArrowLeft, ShoppingBag, CheckCircle2, Smartphone, Check } from "lucide-react";
 
 function FormField({
@@ -60,11 +61,30 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [deliveryZone, setDeliveryZone] = useState<keyof typeof deliveryCharges>("inside");
   const shipping = cart.length > 0 ? deliveryCharges[deliveryZone] : 0;
-  const grandTotal = cartTotal + shipping;
+  const [account, setAccount] = useState<{ signedIn: boolean; vip: boolean } | null>(null);
+  const [accountError, setAccountError] = useState("");
+  useEffect(() => {
+    const controller = new AbortController();
+    async function refreshAccount() {
+      try {
+        const response = await fetch("/api/account", { cache: "no-store", signal: controller.signal });
+        if (!response.ok) throw new Error("Unable to check membership. Refresh checkout before paying.");
+        const result = await response.json();
+        setAccount(result); setAccountError("");
+      } catch (error) {
+        if (!controller.signal.aborted) setAccountError(error instanceof Error ? error.message : "Unable to check membership.");
+      }
+    }
+    void refreshAccount();
+    window.addEventListener("focus", refreshAccount);
+    return () => { controller.abort(); window.removeEventListener("focus", refreshAccount); };
+  }, []);
+  const discount = vipDiscount(cartTotal, account?.vip === true);
+  const grandTotal = Math.round((cartTotal - discount + shipping) * 100) / 100;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (loading) return;
+    if (loading || !account || accountError) return;
     setError("");
     setLoading(true);
 
@@ -92,6 +112,9 @@ export default function CheckoutPage() {
           grand_total: grandTotal,
           items: cart,
           payment_method: paymentMethod,
+          delivery_date: data.get("delivery_date"),
+          note_card_message: data.get("note_card_message") ?? "",
+          preferred_delivery_time: data.get("preferred_delivery_time") ?? "",
         }),
       });
 
@@ -223,6 +246,9 @@ export default function CheckoutPage() {
             {/* Contact */}
             <div className="rounded-2xl border border-primary/10 bg-white/80 backdrop-blur-sm p-7 shadow-sm">
               <SectionHeading number="1" title="Contact Information" />
+              <div className="mb-5 rounded-xl bg-primary/5 p-4 text-sm text-text/70">
+                {accountError ? <p role="alert" className="text-red-600">{accountError}</p> : !account ? "Checking membership…" : account.vip ? "VIP Bloom Club · Your 15% product discount is active." : account.signedIn ? <Link href="/vip-membership" className="text-primary underline">Join VIP Bloom Club for 15% off products.</Link> : <><Link href="/account" className="text-primary underline">Sign in</Link> to use your VIP benefits or save this order to your account.</>}
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <FormField label="First Name" id="first_name" placeholder="Sarah" half />
                 <FormField label="Last Name" id="last_name" placeholder="Johnson" half />
@@ -246,6 +272,15 @@ export default function CheckoutPage() {
               </div>
 
               <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2">
+                  <label htmlFor="delivery_date" className="mb-1.5 block text-sm font-medium text-text/70">Delivery or event date <span className="text-primary">*</span></label>
+                  <input id="delivery_date" name="delivery_date" type="date" required min={earliestDeliveryDate()} className="w-full rounded-xl border border-primary/20 bg-white px-4 py-3 text-sm text-text" />
+                  <p className="mt-2 text-xs text-text/60">Please allow at least 4 days. We’ll confirm delivery arrangements with you.</p>
+                </div>
+                {account?.vip && <>
+                  <FormField label="Preferred delivery time (subject to availability)" id="preferred_delivery_time" placeholder="e.g. Afternoon, 2–5 PM" required={false} />
+                  <div className="col-span-2"><label htmlFor="note_card_message" className="mb-1.5 block text-sm font-medium text-text/70">Complimentary VIP note card</label><textarea id="note_card_message" name="note_card_message" maxLength={500} rows={3} placeholder="Your personal message (optional)" className="w-full rounded-xl border border-primary/20 bg-white px-4 py-3 text-sm text-text" /></div>
+                </>}
                 <FormField label="Street Address" id="address" placeholder="123 Rose Garden Lane" />
                 <FormField label="City" id="city" placeholder="Dhaka" half />
                 <FormField label="District" id="district" placeholder="Dhaka" half />
@@ -300,6 +335,7 @@ export default function CheckoutPage() {
                   <span>Shipping</span>
                   <span>৳ {shipping}</span>
                 </div>
+                {discount > 0 && <div className="flex justify-between text-primary"><span>VIP savings (15%)</span><span>− ৳ {discount.toLocaleString("en-BD")}</span></div>}
                 <div className="flex justify-between border-t border-primary/10 pt-3 text-base font-bold text-text">
                   <span>Total</span>
                   <span>৳ {grandTotal.toLocaleString("en-BD")}</span>
@@ -341,6 +377,7 @@ export default function CheckoutPage() {
                   </label>
                 ))}
               </fieldset>
+              <p className="mt-3 text-xs leading-relaxed text-text/60">Use your selected payment method on the payment page.</p>
               <div className="mt-5 rounded-xl border border-primary/15 bg-primary/5 p-4">
                 <p className="mb-3 text-sm font-semibold text-text">Before placing your order</p>
                 <ul className="space-y-2 text-xs leading-relaxed text-text/70">
@@ -355,7 +392,7 @@ export default function CheckoutPage() {
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !account || !!accountError}
                 className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-primary py-3.5 text-sm font-bold uppercase tracking-widest text-white shadow-md transition-all hover:bg-text hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-70 active:scale-95"
               >
                 {loading ? "Please wait..." : paymentMethod === "bkash" ? "Pay with bKash" : "Pay with Nagad"}

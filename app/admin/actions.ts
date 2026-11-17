@@ -15,6 +15,9 @@ export async function login(prevState: { error: string } | null, formData: FormD
     return { error: error.message }
   }
 
+  const { data: isAdmin } = await supabase.rpc('is_admin')
+  if (!isAdmin) return { error: 'This account does not have admin access.' }
+
   redirect('/admin/dashboard')
 }
 

@@ -15,6 +15,8 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
+  const { data: admin } = await supabase.rpc('is_admin')
+  if (!admin) return Response.json({ error: 'Admin access required' }, { status: 403 })
   const body = await request.json()
   const { name, status } = body
 

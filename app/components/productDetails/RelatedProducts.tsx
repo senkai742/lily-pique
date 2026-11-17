@@ -45,6 +45,7 @@ export default async function RelatedProducts({
 
     return {
       id: p.id,
+      vipEarlyAccess: p.vip_early_access,
       name: p.name,
       category: category,
       categorySlug: categorySlug,

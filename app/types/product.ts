@@ -10,6 +10,7 @@ export type Product = {
   name: string;
   category: string;
   categorySlug: string;
+  vipEarlyAccess?: boolean;
   description: string;
   variants: ColorVariant[];
 };

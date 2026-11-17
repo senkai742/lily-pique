@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { orderDatabase, paymentOrigin, rupantorRequest } from "@/lib/rupantorpay";
 import { deliveryCharges } from "@/config/order-policy";
+import { customerContext } from "@/lib/customer";
+import { validDeliveryDate, vipDiscount } from "@/config/vip";
 import { randomUUID } from "node:crypto";
 
 export async function POST(req: NextRequest) {
@@ -20,6 +22,16 @@ export async function POST(req: NextRequest) {
       items,
     } = body;
 
+    const { user, membership } = await customerContext();
+    const isVip = membership?.status === "active";
+    if (!validDeliveryDate(body.delivery_date)) {
+      return NextResponse.json({ error: "Choose a delivery date at least 4 days in advance." }, { status: 400 });
+    }
+    const noteCard = body.note_card_message ?? "";
+    const preferredTime = body.preferred_delivery_time ?? "";
+    if (typeof noteCard !== "string" || noteCard.length > 500 || typeof preferredTime !== "string" || preferredTime.length > 120 || (!isVip && (noteCard.trim() || preferredTime.trim()))) {
+      return NextResponse.json({ error: "Please check your member note card and delivery preference." }, { status: 400 });
+    }
     const deliveryZone = body.delivery_zone;
     if ((deliveryZone !== "inside" && deliveryZone !== "outside") || body.policy_accepted !== true) {
       return NextResponse.json({ error: "Please select a delivery area and agree to the order policies." }, { status: 400 });
@@ -43,11 +55,11 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "Invalid cart item." }, { status: 400 });
       }
       const [{ data: product, error: productError }, { data: variant, error: variantError }] = await Promise.all([
-        supabase.from("products").select("id, name").eq("id", productId).eq("status", "active").single(),
+        supabase.from("products").select("id, name, vip_early_access").eq("id", productId).eq("status", "active").single(),
         supabase.from("product_variants").select("price, color, hex_code, images")
           .eq("product_id", productId).eq("color", item.color).single(),
       ]);
-      if (productError || variantError || !product || !variant || !Number.isFinite(Number(variant.price)) || Number(variant.price) <= 0) {
+      if (productError || variantError || !product || !variant || (product.vip_early_access && !isVip) || !Number.isFinite(Number(variant.price)) || Number(variant.price) <= 0) {
         return NextResponse.json({ error: "A product is no longer available. Please refresh your cart." }, { status: 400 });
       }
       pricedItems.push({ id: product.id, name: product.name, color: variant.color,
@@ -56,13 +68,23 @@ export async function POST(req: NextRequest) {
     }
     const subtotal = pricedItems.reduce((sum, item) => sum + Math.round(item.price * 100) * item.quantity, 0) / 100;
     const shipping = deliveryCharges[deliveryZone as keyof typeof deliveryCharges];
-    const grand_total = subtotal + shipping;
+    const discount = vipDiscount(subtotal, isVip);
+    const grand_total = Math.round((subtotal - discount + shipping) * 100) / 100;
+    if (typeof body.grand_total !== "number" || !Number.isFinite(body.grand_total) || Math.round(body.grand_total * 100) !== Math.round(grand_total * 100)) {
+      return NextResponse.json({ error: "Your prices or membership status changed. Refresh checkout before paying." }, { status: 409 });
+    }
     const paymentToken = randomUUID();
 
     // Insert the order
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert({
+        user_id: user?.id ?? null,
+        vip_member: isVip,
+        vip_discount: discount,
+        note_card_message: isVip ? noteCard.trim() || null : null,
+        delivery_date: body.delivery_date,
+        preferred_delivery_time: isVip ? preferredTime.trim() || null : null,
         first_name,
         last_name,
         email,

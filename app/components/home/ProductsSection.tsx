@@ -38,6 +38,7 @@ export default async function ProductSection() {
 
     return {
       id: p.id,
+      vipEarlyAccess: p.vip_early_access,
       name: p.name,
       category: category?.name || "Uncategorized",
       categorySlug: category?.slug || "uncategorized",

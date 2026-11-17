@@ -29,6 +29,7 @@ export default function AdminDashboardLayout({
     { name: "Orders", href: "/admin/dashboard/orders", icon: ShoppingBag },
     { name: "Categories", href: "/admin/dashboard/categories", icon: LayoutList },
     { name: "Products", href: "/admin/dashboard/products", icon: Package },
+    { name: "VIP Members", href: "/admin/dashboard/members", icon: Users },
     { name: "Customers", href: "/admin/dashboard/customers", icon: Users },
     { name: "Settings", href: "/admin/dashboard/settings", icon: Settings },
   ];

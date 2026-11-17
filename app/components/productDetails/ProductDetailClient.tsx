@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Phone, MessageCircle, ShoppingBag, ChevronLeft, ChevronRight, Truck, FileText, ShieldCheck } from "lucide-react";
@@ -15,10 +15,6 @@ export default function ProductDetailClient({ product }: { product: Product }) {
 
   const variant = product.variants[activeVariantIdx];
   const images = variant.images;
-
-  useEffect(() => {
-    setActiveImageIdx(0);
-  }, [activeVariantIdx]);
 
   const prevImage = useCallback(() => {
     setActiveImageIdx((i) => (i - 1 + images.length) % images.length);
@@ -143,7 +139,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
                   return (
                     <button
                       key={v.color}
-                      onClick={() => setActiveVariantIdx(i)}
+                      onClick={() => { setActiveVariantIdx(i); setActiveImageIdx(0); }}
                       className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-all ${
                         isActive
                           ? "border-primary bg-primary/5 text-primary shadow-sm ring-1 ring-primary/20"
@@ -179,6 +175,7 @@ export default function ProductDetailClient({ product }: { product: Product }) {
           </div>
           
           <div className="mt-auto pt-4 flex flex-col gap-3">
+            {product.vipEarlyAccess && <p className="text-sm font-semibold text-primary">VIP early access</p>}
             <div className="rounded-xl border border-primary/15 bg-primary/5 p-4 text-xs leading-relaxed text-text/70">
               <p>Order at least 4 days before your delivery or event date. Advance payment required. Fresh flowers and custom handmade items cannot be returned.</p>
               <Link href="/delivery-returns" className="mt-2 inline-block font-medium text-primary underline">Delivery charges &amp; order policies</Link>

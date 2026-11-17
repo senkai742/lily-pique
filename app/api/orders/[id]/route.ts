@@ -7,6 +7,8 @@ export async function PATCH(
 ) {
   try {
     const supabase = await createClient();
+    const { data: admin } = await supabase.rpc("is_admin");
+    if (!admin) return NextResponse.json({ error: "Admin access required" }, { status: 403 });
     const { id } = await params;
     const body = await request.json();
     const { status } = body;

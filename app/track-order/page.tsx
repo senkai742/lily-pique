@@ -34,6 +34,8 @@ type TrackedOrder = {
   first_name: string;
   last_name: string;
   phone: string;
+  vip_discount: number;
+  delivery_date: string | null;
   subtotal: number;
   shipping: number;
   grand_total: number;
@@ -324,9 +326,11 @@ function TrackOrderContent() {
                     <div className="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-text/60">
                       <div>
                         Delivery: <span className="capitalize font-medium text-text">{order.delivery_zone} Dhaka</span>
+                        {order.delivery_date && <span className="ml-3">Requested date: {order.delivery_date}</span>}
                       </div>
                       <div className="flex gap-4">
                         <span>Subtotal: ৳ {Number(order.subtotal).toLocaleString("en-BD")}</span>
+                        {Number(order.vip_discount) > 0 && <span className="text-primary">VIP savings: − ৳ {Number(order.vip_discount).toLocaleString("en-BD")}</span>}
                         <span>Shipping: ৳ {Number(order.shipping).toLocaleString("en-BD")}</span>
                         <span className="font-bold text-text">
                           Total: ৳ {Number(order.grand_total).toLocaleString("en-BD")}

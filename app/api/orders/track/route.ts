@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
       .select(`
         id, created_at, status, delivery_zone,
         first_name, last_name, phone,
-        subtotal, shipping, grand_total, note,
+        subtotal, shipping, grand_total, vip_discount, delivery_date, note,
         order_items (
           id, product_name, color, color_hex, image, price, quantity
         )

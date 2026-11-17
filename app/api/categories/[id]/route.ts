@@ -6,6 +6,8 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient()
+  const { data: admin } = await supabase.rpc('is_admin')
+  if (!admin) return Response.json({ error: 'Admin access required' }, { status: 403 })
   const { id } = await params
   const body = await request.json()
   const { name, status } = body
@@ -32,6 +34,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient()
+  const { data: admin } = await supabase.rpc('is_admin')
+  if (!admin) return Response.json({ error: 'Admin access required' }, { status: 403 })
   const { id } = await params
 
   const { error } = await supabase

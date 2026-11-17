@@ -36,6 +36,11 @@ export type Order = {
   status: string;
   payment_method: string;
   payment_status: string;
+  vip_member: boolean;
+  vip_discount: number;
+  note_card_message: string | null;
+  delivery_date: string | null;
+  preferred_delivery_time: string | null;
   order_items: OrderItem[];
 };
 
@@ -146,6 +151,7 @@ export default function OrdersTable({ orders: initialOrders }: { orders: Order[]
                         {order.first_name} {order.last_name}
                       </div>
                       <div className="text-xs text-zinc-400">{order.phone}</div>
+                      {order.vip_member && <span className="mt-1 inline-block rounded-full bg-primary/10 px-2 py-1 text-[10px] font-semibold text-primary">VIP · Priority handling</span>}
                     </td>
 
                     {/* Ordered Items Preview */}
@@ -258,6 +264,12 @@ export default function OrdersTable({ orders: initialOrders }: { orders: Order[]
                       <td colSpan={9} className="px-8 pb-5 pt-3">
                         <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-zinc-400">
                           Order Items
+                        </div>
+                        <div className="mb-4 space-y-2 rounded-xl border border-primary/15 bg-white p-4 text-sm">
+                          {order.delivery_date && <p><strong>Delivery date:</strong> {order.delivery_date}</p>}
+                          {order.preferred_delivery_time && <p><strong>Preferred time (subject to availability):</strong> {order.preferred_delivery_time}</p>}
+                          {order.vip_member && <p><strong>VIP savings:</strong> ৳{Number(order.vip_discount).toLocaleString("en-BD")} · Include complimentary note card</p>}
+                          {order.note_card_message && <p className="whitespace-pre-wrap"><strong>Note card message:</strong> {order.note_card_message}</p>}
                         </div>
                         <div className="space-y-2">
                           {order.order_items?.map((item) => (

@@ -35,13 +35,17 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-## bKash payments through RupantorPay
+## bKash and Nagad payments through RupantorPay
 
 1. Run `supabase/migrations/20261110_add_order_payments.sql` in Supabase SQL Editor before deploying the code.
 2. Set the server environment variables `SITE_URL` (your public HTTPS origin) and `RUPANTORPAY_API_KEY` (the key for that registered brand). Keep the API key private; see `.env.example` for all required variables.
-3. In RupantorPay, activate your plan, register the website/brand, enable the bKash wallet, and complete the mobile device/app setup. Enable only bKash for this brand: the documented checkout API does not expose a payment-method restriction parameter.
-4. Redeploy and test a payment, cancellation, pending payment, and webhook on the public domain. Orders must remain `payment_status=pending` until authenticated verification confirms the transaction, BDT amount, bKash method, and order metadata. A cancelled or interrupted session remains pending, allowing a late webhook to confirm payment. Fulfillment status is separate from payment status.
+3. In RupantorPay, activate your plan, register the website/brand, enable the bKash and Nagad wallets, and complete the mobile device/app setup. The documented checkout API does not expose a payment-method restriction parameter; customers must use their selected method on the hosted payment page.
+4. Redeploy and test a payment, cancellation, pending payment, and webhook on the public domain. Orders must remain `payment_status=pending` until authenticated verification confirms the transaction, BDT amount, selected payment method, and order metadata. A cancelled or interrupted session remains pending, allowing a late webhook to confirm payment. Fulfillment status is separate from payment status.
 
 Customers retain their cart after cancellation. A confirmed payment clears the original cart when they return; a cart changed in another tab is retained. Webhook notifications use `/api/payments/rupantorpay` and always reverify with the provider. Repeated confirmations are safe, and each provider transaction can belong to only one order. If checkout initialization times out, the pending order is retained in case the provider created a session.
 
 API reference: https://rupantorpay.com/developers/docs
+
+## VIP Bloom Club
+
+See [the VIP deployment guide](docs/vip-bloom-club.md) for database migration, staff account access, email sign-in settings, membership payments, fulfillment and early-access controls. Complete those steps before enabling customer registration.

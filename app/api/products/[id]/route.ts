@@ -6,6 +6,8 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient()
+  const { data: admin } = await supabase.rpc('is_admin')
+  if (!admin) return Response.json({ error: 'Admin access required' }, { status: 403 })
   const { id } = await params
 
   // Variants will cascade-delete automatically via FK

@@ -9,6 +9,7 @@ interface Props {
   searchParams: Promise<{
     category?: string;
     q?: string;
+    vip?: string;
   }>;
 }
 
@@ -17,7 +18,7 @@ export const dynamic = "force-dynamic";
 export default async function ProductsPage({
   searchParams,
 }: Props) {
-  const { category, q } = await searchParams;
+  const { category, q, vip } = await searchParams;
   const supabase = await createClient();
 
   const [
@@ -31,7 +32,7 @@ export default async function ProductsPage({
   ]);
 
   const categories = dbCategories ?? [];
-  const rawProducts = dbProducts ?? [];
+  const rawProducts = (dbProducts ?? []).filter(p => vip !== "1" || p.vip_early_access);
   const rawVariants = dbVariants ?? [];
 
   const categoryMap = Object.fromEntries(categories.map((c) => [c.id, c]));
@@ -49,6 +50,7 @@ export default async function ProductsPage({
 
     return {
       id: p.id,
+      vipEarlyAccess: p.vip_early_access,
       name: p.name,
       category: pCategory?.name || "Uncategorized",
       categorySlug: pCategory?.slug || "uncategorized",

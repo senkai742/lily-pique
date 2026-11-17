@@ -36,6 +36,7 @@ export default async function ProductDetailsPage({
 
   const product: Product = {
     id: dbProduct.id,
+    vipEarlyAccess: dbProduct.vip_early_access,
     name: dbProduct.name,
     category: category?.name || "Uncategorized",
     categorySlug: category?.slug || "uncategorized",
