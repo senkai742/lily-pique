@@ -19,7 +19,7 @@ const policy = load('config/vip.ts');
 test('VIP discount excludes shipping and rounds to cents', () => {
   assert.equal(policy.vipDiscount(1000, true), 150);
   assert.equal(1000 - policy.vipDiscount(1000, true) + 190, 1040);
-  assert.equal(1000 - policy.vipDiscount(1000, true) + 420, 1270);
+  assert.equal(1000 - policy.vipDiscount(1000, true) + 450, 1300);
   assert.equal(policy.vipDiscount(99.99, true), 15);
   assert.equal(policy.vipDiscount(1000, false), 0);
 });
@@ -110,8 +110,8 @@ test('VIP checkout charges discounted products plus full delivery, saves fulfill
   assert.equal(f.captured.order.note_card_message, 'Happy birthday'); assert.equal(f.captured.provider.amount, '1040');
 });
 test('outside Dhaka retains full delivery charge with VIP discount', async () => {
-  const f = checkoutFixture({ active: true, bodyChanges: { delivery_zone: 'outside', grand_total: 1270 } });
-  assert.equal((await f.call()).status, 201); assert.equal(f.captured.order.shipping, 420); assert.equal(f.captured.provider.amount, '1270');
+  const f = checkoutFixture({ active: true, bodyChanges: { delivery_zone: 'outside', grand_total: 1300 } });
+  assert.equal((await f.call()).status, 201); assert.equal(f.captured.order.shipping, 450); assert.equal(f.captured.provider.amount, '1300');
 });
 test('guest cannot forge membership or discounted prices', async () => {
   const f = checkoutFixture({ bodyChanges: { vip_member: true, vip_discount: 150, grand_total: 1040 } });
@@ -182,4 +182,28 @@ test('customer accounts cannot invoke existing admin mutation endpoints', async 
     for (const method of methods) assert.equal((await route[method]({}, { params: Promise.resolve({ id: 'test' }) })).status, 403);
   }
   assert.equal(tableTouched, false);
+});
+
+test('free delivery requires more than ৳2,500 after discounts and applies only inside Dhaka', () => {
+  const { getDeliveryCharge } = load('config/order-policy.ts');
+  assert.equal(getDeliveryCharge('inside', 2500, 1), 190);
+  assert.equal(getDeliveryCharge('inside', 2500.01, 3), 0);
+  assert.equal(getDeliveryCharge('inside', 2900 - policy.vipDiscount(2900, true), 2), 290);
+  assert.equal(getDeliveryCharge('outside', 3000, 3), 650);
+});
+
+test('order checkout stores free shipping and charges only the product total', async () => {
+  const f = checkoutFixture({ bodyChanges: { grand_total: 3000,
+    items: [{ id: '11111111-1111-1111-1111-111111111111', color: 'Pink', quantity: 3 }] } });
+  assert.equal((await f.call()).status, 201);
+  assert.equal(f.captured.order.shipping, 0);
+  assert.equal(f.captured.provider.amount, '3000');
+});
+
+test('two units of the same product add one delivery surcharge to the payment total', async () => {
+  const f = checkoutFixture({ bodyChanges: { grand_total: 2290,
+    items: [{ id: '11111111-1111-1111-1111-111111111111', color: 'Pink', quantity: 2 }] } });
+  assert.equal((await f.call()).status, 201);
+  assert.equal(f.captured.order.shipping, 290);
+  assert.equal(f.captured.provider.amount, '2290');
 });

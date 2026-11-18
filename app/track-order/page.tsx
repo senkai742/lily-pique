@@ -3,6 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { orderPolicies } from "@/config/order-policy";
 import { useSearchParams } from "next/navigation";
 import {
   Search,
@@ -337,6 +338,17 @@ function TrackOrderContent() {
                         </span>
                       </div>
                     </div>
+                    <section className="mt-5 rounded-xl border border-primary/15 bg-primary/5 p-4">
+                      <h3 className="mb-3 text-sm font-semibold text-text">Order policies</h3>
+                      <dl className="space-y-3 text-sm leading-relaxed text-text/70">
+                        {orderPolicies.map(({ title, text }) => (
+                          <div key={title}>
+                            <dt className="font-semibold text-text">{title}</dt>
+                            <dd>{text}</dd>
+                          </div>
+                        ))}
+                      </dl>
+                    </section>
                   </div>
                 </div>
               );

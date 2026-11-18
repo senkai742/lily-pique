@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { orderDatabase, paymentOrigin, rupantorRequest } from "@/lib/rupantorpay";
-import { deliveryCharges } from "@/config/order-policy";
+import { getDeliveryCharge } from "@/config/order-policy";
 import { customerContext } from "@/lib/customer";
 import { validDeliveryDate, vipDiscount } from "@/config/vip";
 import { randomUUID } from "node:crypto";
@@ -67,8 +67,9 @@ export async function POST(req: NextRequest) {
         price: Number(variant.price), quantity: item.quantity });
     }
     const subtotal = pricedItems.reduce((sum, item) => sum + Math.round(item.price * 100) * item.quantity, 0) / 100;
-    const shipping = deliveryCharges[deliveryZone as keyof typeof deliveryCharges];
     const discount = vipDiscount(subtotal, isVip);
+    const unitCount = pricedItems.reduce((count, item) => count + item.quantity, 0);
+    const shipping = getDeliveryCharge(deliveryZone, subtotal - discount, unitCount);
     const grand_total = Math.round((subtotal - discount + shipping) * 100) / 100;
     if (typeof body.grand_total !== "number" || !Number.isFinite(body.grand_total) || Math.round(body.grand_total * 100) !== Math.round(grand_total * 100)) {
       return NextResponse.json({ error: "Your prices or membership status changed. Refresh checkout before paying." }, { status: 409 });

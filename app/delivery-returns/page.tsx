@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { deliveryCharges, orderPolicies } from "@/config/order-policy";
+import { additionalItemDeliveryMessage, deliveryCharges, freeDeliveryMessage, orderPolicies } from "@/config/order-policy";
 
 export const metadata = {
   title: "Delivery & Returns | LilyPique",
@@ -19,11 +19,13 @@ export default function DeliveryReturnsPage() {
           </section>
         ))}
         <section className="rounded-2xl border border-primary/15 bg-white p-6">
-          <h2 className="mb-4 font-serif text-xl font-semibold text-text">Delivery charges</h2>
+          <h2 className="mb-4 font-serif text-xl font-semibold text-text">Delivery charges for the first item</h2>
           <dl className="space-y-3 text-sm text-text/70">
             <div className="flex justify-between gap-4"><dt>Inside Dhaka</dt><dd className="font-semibold text-text">৳{deliveryCharges.inside}</dd></div>
             <div className="flex justify-between gap-4"><dt>Outside Dhaka</dt><dd className="font-semibold text-text">৳{deliveryCharges.outside}</dd></div>
           </dl>
+          <p className="mt-4 text-sm text-text/70">{additionalItemDeliveryMessage}</p>
+          <p className="mt-5 rounded-xl bg-primary/10 p-4 text-sm font-medium text-text">{freeDeliveryMessage}</p>
         </section>
       </div>
       <Link href="/contact" className="mt-8 inline-block font-medium text-primary underline underline-offset-4">Contact us about your order</Link>

@@ -4,7 +4,7 @@ import { useCart } from "@/app/context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { deliveryCharges, orderPolicies } from "@/config/order-policy";
+import { additionalItemDeliveryMessage, deliveryCharges, freeDeliveryMessage, getDeliveryCharge, orderPolicies } from "@/config/order-policy";
 import { earliestDeliveryDate, vipDiscount } from "@/config/vip";
 import { ArrowLeft, ShoppingBag, CheckCircle2, Smartphone, Check } from "lucide-react";
 
@@ -60,7 +60,6 @@ export default function CheckoutPage() {
   const [copied, setCopied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [deliveryZone, setDeliveryZone] = useState<keyof typeof deliveryCharges>("inside");
-  const shipping = cart.length > 0 ? deliveryCharges[deliveryZone] : 0;
   const [account, setAccount] = useState<{ signedIn: boolean; vip: boolean } | null>(null);
   const [accountError, setAccountError] = useState("");
   useEffect(() => {
@@ -80,6 +79,10 @@ export default function CheckoutPage() {
     return () => { controller.abort(); window.removeEventListener("focus", refreshAccount); };
   }, []);
   const discount = vipDiscount(cartTotal, account?.vip === true);
+  const unitCount = cart.reduce((count, item) => count + item.quantity, 0);
+  const insideCharge = getDeliveryCharge("inside", cartTotal - discount, unitCount);
+  const outsideCharge = getDeliveryCharge("outside", cartTotal - discount, unitCount);
+  const shipping = deliveryZone === "inside" ? insideCharge : outsideCharge;
   const grandTotal = Math.round((cartTotal - discount + shipping) * 100) / 100;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -266,9 +269,11 @@ export default function CheckoutPage() {
                 <select id="delivery_zone" name="delivery_zone" value={deliveryZone}
                   onChange={(event) => setDeliveryZone(event.target.value as keyof typeof deliveryCharges)}
                   className="w-full rounded-xl border border-primary/20 bg-white px-4 py-3 text-sm text-text focus:outline-2 focus:outline-primary">
-                  <option value="inside">Inside Dhaka — ৳{deliveryCharges.inside}</option>
-                  <option value="outside">Outside Dhaka — ৳{deliveryCharges.outside}</option>
+                  <option value="inside">Inside Dhaka — {insideCharge === 0 ? "Free delivery" : `৳${insideCharge}`}</option>
+                  <option value="outside">Outside Dhaka — ৳{outsideCharge}</option>
                 </select>
+                <p className="mt-2 text-sm text-text/70">{freeDeliveryMessage}</p>
+                <p className="mt-1 text-sm text-text/70">{additionalItemDeliveryMessage}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -333,7 +338,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between">
                   <span>Shipping</span>
-                  <span>৳ {shipping}</span>
+                  <span className={shipping === 0 ? "font-semibold text-emerald-700" : undefined}>{shipping === 0 ? "Free delivery" : `৳ ${shipping}`}</span>
                 </div>
                 {discount > 0 && <div className="flex justify-between text-primary"><span>VIP savings (15%)</span><span>− ৳ {discount.toLocaleString("en-BD")}</span></div>}
                 <div className="flex justify-between border-t border-primary/10 pt-3 text-base font-bold text-text">
