@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import Navbar from "./components/Navbar";
 import { colors } from "../config/colors";
 import ClientLayoutWrapper from "./components/ClientLayoutWrapper";
 
@@ -15,9 +14,13 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
 });
 
+const title = "LilyPique | Handcrafted Bouquets & Floral Gifts";
+const description = "Thoughtfully handcrafted bouquets and floral arrangements for birthdays, celebrations, and everyday moments worth making special.";
+
 export const metadata: Metadata = {
-  title: "LilyPique",
-  description: "Premium clothing and apparel for modern lifestyles",
+  title,
+  description,
+  openGraph: { title, description, siteName: "LilyPique", type: "website" },
   icons: {
     icon: "/images/logo.png",
     apple: "/images/logo.png",
