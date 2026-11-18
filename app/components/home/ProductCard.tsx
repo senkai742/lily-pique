@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
 import { ShoppingBag, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
+import { vipDiscount } from "@/config/vip";
 import { Product } from "@/app/types/product";
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -52,17 +53,19 @@ export default function ProductCard({ product }: { product: Product }) {
     });
   };
 
-  // Price range label
-  const prices = product.variants.map((v) => v.price);
-  const minPrice = Math.min(...prices);
-  const maxPrice = Math.max(...prices);
-  const priceLabel =
-    minPrice === maxPrice
-      ? `৳ ${minPrice.toLocaleString("en-BD")}`
-      : `৳ ${minPrice.toLocaleString("en-BD")} – ${maxPrice.toLocaleString("en-BD")}`;
+  const regularPrice = Number(variant.price);
+  const memberPrice = regularPrice - vipDiscount(regularPrice, true);
+  const roundedMemberPrice = Math.round(memberPrice);
 
   return (
     <Link href={`/products/${product.id}`} className="group flex flex-col h-full relative">
+
+      <div className="pointer-events-none absolute right-1 top-2 z-20 rounded-lg bg-[#f5e7ef] px-2.5 py-1.5 text-right text-[#53354b] shadow-sm ring-1 ring-black/5 sm:right-2">
+        <span className="block text-[10px] font-semibold leading-tight">VIP price</span>
+        <span className="mt-0.5 block text-sm font-bold leading-tight tabular-nums">
+          {Math.abs(memberPrice - roundedMemberPrice) >= 0.005 && "≈ "}৳{roundedMemberPrice.toLocaleString("en-BD")}
+        </span>
+      </div>
 
       {/* Image Slideshow */}
       <div className="relative aspect-[4/5] overflow-hidden rounded-t-[5rem] rounded-b-xl bg-secondary/20 shadow-sm transition-all duration-500 group-hover:shadow-xl group-hover:shadow-primary/10 ring-1 ring-gold/10">
@@ -150,10 +153,8 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
 
         <div className="mt-auto pt-3 flex flex-col gap-2.5">
-          <p className="text-base font-semibold text-text/90">
-            {variant.price !== minPrice || variant.price !== maxPrice
-              ? `৳ ${variant.price.toLocaleString("en-BD")}`
-              : priceLabel}
+          <p className="text-base font-semibold tabular-nums text-text">
+            ৳{regularPrice.toLocaleString("en-BD")}
           </p>
 
           <button
