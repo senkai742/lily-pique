@@ -14,7 +14,7 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
 });
 
-const title = "LilyPique | Handcrafted Bouquets & Floral Gifts";
+const title = "LilyPique | A Bouquet Made With Effort";
 const description = "Thoughtfully handcrafted bouquets and floral arrangements for birthdays, celebrations, and everyday moments worth making special.";
 
 export const metadata: Metadata = {

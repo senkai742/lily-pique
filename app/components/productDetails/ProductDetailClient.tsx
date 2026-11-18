@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Phone, MessageCircle, ShoppingBag, ChevronLeft, ChevronRight, Truck, FileText, ShieldCheck } from "lucide-react";
 import { Product } from "@/app/types/product";
 import { useCart } from "@/app/context/CartContext";
+import { vipDiscount } from "@/config/vip";
 import { siteConfig } from "@/config/site";
 
 export default function ProductDetailClient({ product }: { product: Product }) {
@@ -15,6 +16,9 @@ export default function ProductDetailClient({ product }: { product: Product }) {
 
   const variant = product.variants[activeVariantIdx];
   const images = variant.images;
+  const regularPrice = Number(variant.price);
+  const memberPrice = regularPrice - vipDiscount(regularPrice, true);
+  const roundedMemberPrice = Math.round(memberPrice);
 
   const prevImage = useCallback(() => {
     setActiveImageIdx((i) => (i - 1 + images.length) % images.length);
@@ -43,6 +47,12 @@ export default function ProductDetailClient({ product }: { product: Product }) {
         {/* Left: Image Gallery */}
         <div className="flex flex-col gap-4">
           <div className="relative w-full aspect-[4/3] sm:aspect-square lg:aspect-[4/3] overflow-hidden rounded-2xl bg-secondary/10 group border border-primary/10">
+            <div className="pointer-events-none absolute right-3 top-3 z-20 rounded-lg bg-[#f5e7ef] px-2.5 py-1.5 text-right text-[#53354b] shadow-sm ring-1 ring-black/5 sm:right-4 sm:top-4">
+              <span className="block text-[10px] font-semibold leading-tight">VIP price</span>
+              <span className="mt-0.5 block text-sm font-bold leading-tight tabular-nums">
+                {Math.abs(memberPrice - roundedMemberPrice) >= 0.005 && "≈ "}৳{roundedMemberPrice.toLocaleString("en-BD")}
+              </span>
+            </div>
             <Image
               src={images[activeImageIdx]}
               alt={`${product.name} - ${variant.color} ${activeImageIdx + 1}`}
