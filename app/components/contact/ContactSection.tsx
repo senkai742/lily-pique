@@ -8,7 +8,7 @@ import {
   MessageCircle,
   Flower2,
 } from "lucide-react";
-import { FaFacebook } from "react-icons/fa";
+import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { siteConfig } from "@/config/site";
 
 export default function ContactPage() {
@@ -107,7 +107,7 @@ export default function ContactPage() {
               </div>
 
               {/* Social Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-4 pt-4">
                 {siteConfig.socials.facebook && (
                   <Link
                     href={siteConfig.socials.facebook}
@@ -118,6 +118,10 @@ export default function ContactPage() {
                     Facebook
                   </Link>
                 )}
+                  <Link href={siteConfig.socials.instagram} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 rounded-full border border-primary/20 bg-white px-8 py-4 text-xs font-bold uppercase tracking-widest text-primary shadow-sm transition-all hover:bg-secondary hover:-translate-y-0.5 hover:shadow-md">
+                    <FaInstagram size={16} aria-hidden="true" />
+                    Instagram
+                  </Link>
 
                 <Link
                   href={`https://wa.me/${siteConfig.socials.whatsapp.replace("+", "")}`}

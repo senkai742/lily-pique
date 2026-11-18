@@ -1,3 +1,4 @@
+import { FaInstagram } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Flower2, MessageCircle } from "lucide-react";
@@ -70,6 +71,10 @@ export default function Footer() {
                   Facebook
                 </Link>
               )}
+                <Link href={siteConfig.socials.instagram} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[11px] font-semibold uppercase tracking-wider text-background/70 backdrop-blur-sm transition-all duration-200 hover:border-primary/50 hover:bg-primary/15 hover:text-primary">
+                  <FaInstagram size={13} aria-hidden="true" />
+                  Instagram
+                </Link>
               <Link
                 href={`https://wa.me/${siteConfig.socials.whatsapp}`}
                 target="_blank"

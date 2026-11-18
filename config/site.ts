@@ -21,7 +21,8 @@ export const siteConfig = {
   },
 
   socials: {
-    facebook: "",
+    facebook: "https://www.facebook.com/profile.php?id=61593201308809",
+    instagram: "https://www.instagram.com/lilypique/",
     whatsapp: "+8801308421901",
   },
 } as const;
