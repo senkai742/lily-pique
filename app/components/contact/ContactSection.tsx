@@ -3,8 +3,6 @@ import Image from "next/image";
 import {
   Phone,
   Mail,
-  MapPin,
-  Clock,
   MessageCircle,
   Flower2,
 } from "lucide-react";
@@ -41,7 +39,7 @@ export default function ContactPage() {
                 </div>
                 
                 <h1 className="mt-2 text-4xl font-light tracking-tight text-text sm:text-5xl lg:text-6xl leading-[1.1]">
-                  <span className="block">We'd Love to</span>
+                  <span className="block">We&apos;d Love to</span>
                   <span className="block font-serif italic text-primary mt-1">Hear From You</span>
                 </h1>
                 
@@ -83,23 +81,6 @@ export default function ContactPage() {
                           {email}
                         </Link>
                       ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Address */}
-                <div className="flex items-start gap-5 group">
-                  <div className="mt-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-secondary/50 text-primary transition-colors duration-300 group-hover:bg-primary group-hover:text-white">
-                    <MapPin size={20} strokeWidth={1.5} />
-                  </div>
-                  <div>
-                    <h2 className="text-[10px] font-bold uppercase tracking-widest text-gold mb-1">Studio Address</h2>
-                    <p className="text-base font-medium text-text leading-relaxed">
-                      {siteConfig.address}
-                    </p>
-                    <div className="mt-3 flex items-center gap-1.5 text-text/60">
-                      <Clock size={14} />
-                      <span className="text-xs font-semibold">Sat - Thu: 9:00 AM - 9:00 PM</span>
                     </div>
                   </div>
                 </div>

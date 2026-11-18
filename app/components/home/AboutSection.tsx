@@ -16,7 +16,7 @@ export default function AboutSection() {
           <div className="relative mx-auto w-full max-w-md lg:max-w-none aspect-[4/5] overflow-hidden rounded-t-[12rem] rounded-b-3xl bg-secondary shadow-2xl shadow-primary/10 ring-1 ring-gold/20">
             <Image
               src="/images/about.png"
-              alt="LilyPique Floral Studio"
+              alt="LilyPique floral arrangements"
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
               className="object-cover transition-transform duration-1000 hover:scale-105"
@@ -48,7 +48,7 @@ export default function AboutSection() {
             <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-secondary/30 backdrop-blur-sm px-4 py-1.5 shadow-sm">
               <Flower2 size={14} className="text-primary" />
               <span className="text-[10px] font-bold uppercase tracking-widest text-primary">
-                About Our Studio
+                About LilyPique
               </span>
             </div>
             

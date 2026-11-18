@@ -2,15 +2,9 @@
 export const siteConfig = {
   name: "LilyPique",
 
-  phones: [
-    "+8801308421901",
-    "+8801970738253",
-  ],
+  phones: ["+8801339511209"],
 
-  emails: [
-    "bmgellary@gmail.com",
-    "bayazidhasan7256@gmail.com",
-  ],
+  emails: ["nafisanusin533@gmail.com"],
 
   address: "Dhaka, Bangladesh",
 
@@ -23,6 +17,6 @@ export const siteConfig = {
   socials: {
     facebook: "https://www.facebook.com/profile.php?id=61593201308809",
     instagram: "https://www.instagram.com/lilypique/",
-    whatsapp: "+8801308421901",
+    whatsapp: "8801339511209",
   },
 } as const;
