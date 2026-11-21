@@ -1,3 +1,4 @@
+import { orderStorefrontProducts } from "@/config/storefront-order";
 import ProductsHero from "@/app/components/products/ProductsHero";
 import CategoryFilter from "@/app/components/products/CategoryFilter";
 import ProductGrid from "@/app/components/products/ProductsGrid";
@@ -32,7 +33,7 @@ export default async function ProductsPage({
   ]);
 
   const categories = dbCategories ?? [];
-  const rawProducts = (dbProducts ?? []).filter(p => vip !== "1" || p.vip_early_access);
+  const rawProducts = orderStorefrontProducts((dbProducts ?? []).filter(p => vip !== "1" || p.vip_early_access));
   const rawVariants = dbVariants ?? [];
 
   const categoryMap = Object.fromEntries(categories.map((c) => [c.id, c]));

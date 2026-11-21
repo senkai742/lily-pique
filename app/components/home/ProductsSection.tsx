@@ -1,3 +1,4 @@
+import { orderStorefrontProducts } from "@/config/storefront-order";
 import Link from "next/link";
 import ProductCarousel from "@/app/components/ProductCarousel";
 import { Flower2, ArrowRight } from "lucide-react";
@@ -19,7 +20,7 @@ export default async function ProductSection() {
   ]);
 
   const categories = dbCategories ?? [];
-  const rawProducts = dbProducts ?? [];
+  const rawProducts = orderStorefrontProducts(dbProducts ?? []);
   const rawVariants = dbVariants ?? [];
 
   const categoryMap = Object.fromEntries(categories.map((c) => [c.id, c]));

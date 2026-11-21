@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
 import { ShoppingBag, ChevronLeft, ChevronRight } from "lucide-react";
 import { useCart } from "@/app/context/CartContext";
-import { vipDiscount } from "@/config/vip";
+import { vipDiscount, VIP_DISCOUNT_PERCENT } from "@/config/vip";
 import { Product } from "@/app/types/product";
 
 export default function ProductCard({ product }: { product: Product }) {
@@ -61,7 +61,7 @@ export default function ProductCard({ product }: { product: Product }) {
     <Link href={`/products/${product.id}`} className="group flex flex-col h-full relative">
 
       <div className="pointer-events-none absolute right-1 top-2 z-20 rounded-lg bg-[#f5e7ef] px-2.5 py-1.5 text-right text-[#53354b] shadow-sm ring-1 ring-black/5 sm:right-2">
-        <span className="block text-[10px] font-semibold leading-tight">VIP price</span>
+        <span className="block text-[10px] font-semibold leading-tight">VIP price · {VIP_DISCOUNT_PERCENT}% off</span>
         <span className="mt-0.5 block text-sm font-bold leading-tight tabular-nums">
           {Math.abs(memberPrice - roundedMemberPrice) >= 0.005 && "≈ "}৳{roundedMemberPrice.toLocaleString("en-BD")}
         </span>
