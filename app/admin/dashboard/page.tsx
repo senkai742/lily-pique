@@ -5,7 +5,6 @@ import {
   Package, 
   Clock,
   ArrowRight,
-  TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
@@ -30,7 +29,7 @@ export default async function AdminDashboard() {
   const [ordersRes, productsRes] = await Promise.all([
     supabase
       .from("orders")
-      .select("id, grand_total, status, first_name, last_name, phone, email, created_at, order_items(product_name)")
+      .select("id, grand_total, status, payment_status, first_name, last_name, phone, email, created_at, order_items(product_name)")
       .order("created_at", { ascending: false }),
     supabase
       .from("products")
@@ -41,7 +40,13 @@ export default async function AdminDashboard() {
   const products = productsRes.data || [];
 
   // Calculate stats
-  const totalRevenue = orders.reduce((sum, o) => sum + (Number(o.grand_total) || 0), 0);
+  const paidOrders = orders.filter(
+    (order) => order.payment_status === "paid" && order.status?.toLowerCase() !== "cancelled",
+  );
+  const paidSales = paidOrders.reduce(
+    (sum, order) => sum + Math.round(Number(order.grand_total) * 100),
+    0,
+  ) / 100;
   const totalOrders = orders.length;
   const activeProducts = products.filter((p) => (p.status || "").toLowerCase() === "active").length;
 
@@ -53,10 +58,10 @@ export default async function AdminDashboard() {
 
   const stats = [
     { 
-      name: "Total Revenue", 
-      value: `৳ ${totalRevenue.toLocaleString("en-BD")}`, 
+      name: "Total Sales",
+      value: ordersRes.error ? "Unavailable" : `৳ ${paidSales.toLocaleString("en-BD")}`,
       icon: DollarSign, 
-      subtext: `${totalOrders} order${totalOrders !== 1 ? "s" : ""} placed` 
+      subtext: "Paid, non-cancelled orders"
     },
     { 
       name: "Orders", 
@@ -97,7 +102,7 @@ export default async function AdminDashboard() {
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Dashboard</h1>
             <p className="mt-1 text-sm text-zinc-500">
-              Live overview of your store&apos;s revenue, orders, and customer activity.
+              Live overview of your store&apos;s sales, orders, and customer activity.
             </p>
           </div>
           <div className="flex items-center gap-3">
