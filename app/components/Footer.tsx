@@ -118,7 +118,7 @@ export default function Footer() {
               Shop
             </h3>
             <ul className="space-y-3">
-              {["Fresh Bouquets", "Seasonal Blooms", "Event Decor", "Gift Sets", "Custom Orders"].map((item) => (
+              {["Fresh Bouquets", "Seasonal Blooms", "Gift Sets", "Custom Orders"].map((item) => (
                 <li key={item}>
                   <Link
                     href="/products"

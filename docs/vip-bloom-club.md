@@ -36,7 +36,7 @@ Pending memberships resume their saved provider checkout session. Provider timeo
 ## Member benefits
 
 - 15% off all product subtotals when signed in as an active member, rounded to two decimals. No discount on delivery or membership fees. Server prices and membership status override browser input; stale checkout totals must be refreshed.
-- Full delivery charges: ৳190 inside Dhaka / ৳450 outside Dhaka. Inside Dhaka delivery is free on product subtotals over ৳2,500 after discounts.
+- Full delivery charges: ৳190 inside Dhaka / ৳350 outside Dhaka. Inside Dhaka delivery is free on product subtotals over ৳2,500 after discounts.
 - VIP orders have a priority badge in admin, a complimentary note-card message and an optional preferred delivery time. Times require manual confirmation and are subject to availability; this release does not reserve slot capacity.
 - Delivery date must be at least four Bangladesh calendar days ahead, enforced on client and server for every order.
 - Mark products as VIP early access in Admin → VIP Members. Use draft status while preparing a launch; activate after marking it. Turn early access off for public release. Database policies protect lists, direct detail URLs and variants; checkout also rejects early-access purchases by nonmembers. Product image URLs in the existing public image bucket are not private media.

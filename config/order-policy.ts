@@ -1,4 +1,4 @@
-export const deliveryCharges = { inside: 190, outside: 450 } as const;
+export const deliveryCharges = { inside: 190, outside: 350 } as const;
 
 export const additionalItemDeliveryCharge = 100;
 export const additionalItemDeliveryMessage = `Delivery includes the first item. Each additional item adds ৳${additionalItemDeliveryCharge} unless the order qualifies for free delivery.`;
